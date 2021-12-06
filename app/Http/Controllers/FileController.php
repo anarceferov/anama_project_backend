@@ -37,6 +37,16 @@ class FileController extends Controller
         return $this->dataResponse(['image__uuid' => $image->getKey()]);
     }
 
+    // public function uploadSingleIcon(Request $request): JsonResponse
+    // {
+    //     $this->validate($request, [
+    //         'icon_uuid' => 'required'
+    //     ]);
+
+    //     $icon = $this->fileService->uploadFile($request->file('icon_uuid'));
+
+    //     return $this->dataResponse(['icon__uuid' => $icon->getKey()]);
+    // }
 
     public function uploadFile(Request $request): JsonResponse
     {

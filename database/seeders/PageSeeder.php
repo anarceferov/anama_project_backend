@@ -40,7 +40,7 @@ class PageSeeder extends Seeder
         {
             Page::create([
                 'name' => $page,
-                'name_en' =>'EN--'.$page,
+                // 'name_en' =>'EN--'.$page,
                 'is_active'=> 1
             ]);
         }

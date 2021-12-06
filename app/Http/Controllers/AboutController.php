@@ -6,7 +6,10 @@ use App\Models\About;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Traits\ApiResponder;
+use App\Models\AboutCategory;
 use Illuminate\Support\Facades\Validator;
+use App\Models\AboutLocale;
+use App\Traits\Localizable;
 
 class AboutController extends Controller
 {
@@ -14,103 +17,65 @@ class AboutController extends Controller
 
     public function index()
     {
-        $about = About::query()->with('image')->get();
+        $about = AboutCategory::with('abouts')->get();
         return response($about);
     }
 
+
     public function store(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'text' => 'required',
-            'date' =>'numeric|required',
-            // 'image_uuid' => 'required'
-        ]);
-
-
-        if ($validated->fails()) {
-            return response(['message' => 'validate fail']);
-        }
-
         $about_id = null;
         DB::transaction(function () use ($request, &$about_id) {
+
             $about = new About();
-            $about->fill($request->only([
-                'text',
-                'text_en',
-                (int)'date',
-                'image_uuid'
-            ]));
+
+            $about->image_uuid = $request->image_uuid;
+            $about->about_category_id = $request->about_category_id;
             $about->save();
+            $about->setLocales($request->locales);
+
             $about_id = $about->id;
         });
 
         return $this->dataResponse(['about_id' => $about_id], 201);
     }
 
-    public function show($id)
-    {
-    }
 
     public function update(Request $request, $id)
     {
+        DB::transaction(function () use ($request, $id) {
+            $about = About::findOrFail($id);
 
-        $validated = Validator::make($request->all(), [
-            'text' => 'required',
-            'date' =>'numeric|required',
-            // 'image_uuid' => 'required'
-        ]);
+            $about->fill($request->only([
+                'about_category_id',
+                'image_uuid'
+            ]));
+            $about->save();
 
+            $this->setLocales($request->input("locales"));
+        });
 
-        if ($validated->fails()) {
-            return response(['message' => 'validate fail']);
-        }
-
-        try {
-            DB::transaction(function () use ($request, $id) {
-                $about = About::findOrFail($id);
-    
-                $about->fill($request->only([
-                    'text',
-                    'text_en',
-                    (int)'date',
-                    'image_uuid'
-                ]));
-                $about->save();
-            });
-
-            return $this->successResponse(trans('responses.ok'));
-        } catch (\Throwable $th) {
-            return response($th);
-        }
-
-
-        // $about = About::findOrFail($id)->first();
-
-        // $about = new About;
-        // $about->date = $request->date;
-        // $about->text = $request->text;
-        // $about->text_en = $request->text_en;
-        // $about->oreder = $request->order;
-
-
-        // if($request->hasFile('image'))
-        // {
-        //     if (File::exists($about->image)) {
-        //         File::delete(storage_path('public/'.$about->image));
-        //     }
-
-        //     $file = $request->file('image')->getClientOriginalName();
-        //     $request->file('image')->storeAs('public/' , 'public/'.Str::random(10) . '_' . time() . '.' .$file);
-        //     $about->image = $file;
-        // }
-
-        // $about->save();
-
+        return $this->successResponse(trans('responses.ok'));
     }
+
 
     public function destroy($id)
     {
-        About::findOrFail($id)->delete();
-        return response(['message' => 'success delete']);
+        DB::transaction(function () use ($id) {
+            $about = About::findOrFail($id);
+
+            $about->aboutLocales()->delete();
+
+            $about->delete();
+        });
+
+        return $this->successResponse(trans("responses.ok"));
+    }
+
+
+    public function show($id)
+    {
+        $about = About::with('image', 'category', 'locales')->where('id', $id)->first();
+        return $this->dataResponse($about);
     }
 }

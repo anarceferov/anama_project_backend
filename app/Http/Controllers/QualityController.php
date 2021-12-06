@@ -7,6 +7,7 @@ use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\QualityLocale;
 
 class QualityController extends Controller
 {
@@ -14,74 +15,69 @@ class QualityController extends Controller
 
     public function index()
     {
-        $qualities = Quality::query()->with('image')->get();
+        $qualities = Quality::query()->with('image', 'locales')->get();
         return response($qualities);
     }
 
+
     public function store(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'title' => 'required',
-            'image_uuid' => 'required',
-         ]);
 
-
-        if($validated->fails())
-        {
-            return response(['message' => 'validate fail']);
-        }
-
-        $employee_id = null;
-        DB::transaction(function () use ($request, &$employee_id) {
-        $employee = new Quality();
-            $employee->fill($request->only([
-                'text',
-                'text_en',
+        $quality_id = null;
+        DB::transaction(function () use ($request, &$quality_id) {
+            $quality = new Quality();
+            $quality->fill($request->only([
                 'image_uuid'
             ]));
-            $employee->save();
-            $employee_id = $employee->id;
+            $quality->save();
+
+            $this->setLocales($request->input("locales"));
+
+            $quality_id = $quality->id;
         });
 
-        return $this->dataResponse(['employee_id' => $employee_id], 201);
+        return $this->dataResponse(['quality_id' => $quality_id], 201);
     }
 
-    public function show($id)
-    {
-        //
-    }
+
 
     public function update(Request $request, $id)
     {
-        $validated = Validator::make($request->all(), [
-            'text' => 'required',
-            'image_uuid' => 'required',
-         ]);
 
+        DB::transaction(function () use ($request, $id) {
+            $quality = Quality::findOrFail($id);
+            $quality->fill($request->only([
+                'image_uuid'
+            ]));
 
-        if($validated->fails())
-        {
-            return response(['message' => 'validate fail']);
-        }
+            $quality->save();
 
-        try {
-            DB::transaction(function () use ($request, $id) {
-                Quality::findOrFail($id)->update([
-                    'text'=>$request->date,
-                    'text_en'=>$request->title,
-                    'file_uuid'=>$request->file_uuid
-                ]);
-            });
-    
-            return $this->dataResponse(['message' => 'success']);
-        } catch (\Throwable $th) {
-            return response($th);
-        }
+            $this->setLocales($request->input("locales"));
+        });
+
+        return $this->successResponse(trans('responses.ok'));
     }
+
+
 
     public function destroy($id)
     {
-        Quality::findOrFail($id)->delete();
-        return response(['message'=>'success delete']);
+
+        DB::transaction(function () use ($id) {
+            $quality = Quality::findOrFail($id);
+
+            $quality->qualityLocales()->delete();
+
+            $quality->delete();
+        });
+
+        return $this->successResponse(trans("responses.ok"));
+    }
+
+
+    public function show($id)
+    {
+        $quality = Quality::with('image' , 'locales')->where('id' , $id)->first();
+        return $this->dataResponse($quality);
     }
 }

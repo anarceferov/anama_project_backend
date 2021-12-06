@@ -8,11 +8,11 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-
-
+use App\Traits\ApiResponder;
 
 class AuthController extends Controller
 {
+    use ApiResponder;
 
     public function __construct()
     {

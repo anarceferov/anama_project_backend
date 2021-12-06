@@ -7,81 +7,77 @@ use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Presses;
+use App\Models\PressLocale;
 
 class PressController extends Controller
 {
     use ApiResponder;
     public function index()
     {
-        $presses = Press::query()->with('image')->get();
+        $presses = Press::query()->with('file' , 'locales')->get();
         return response($presses);
     }
 
     public function store(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'title' => 'required',
-            'date' => 'required',
-            'file_uuid'=>'required'
-        ]);
-
-        if ($validated->fails()) {
-            return response(['message' => 'fail']);
-        }
-
         $press_id = null;
+
         DB::transaction(function () use ($request, &$press_id) {
-            $press = Press::create([
-                'date'=>$request->date,
-                'title'=>$request->title,
-                'title_en'=>$request->title_en,
-                'file_uuid'=>$request->file_uuid
-            ]);
+            $press = new Press();
+
+            $press->fill($request->only([
+                'date',
+                'file_uuid'
+            ]));
+            
+            $press->save();
+
+            $this->setLocales($request->input("locales"));
+
             $press_id = $press->id;
         });
-
         return $this->dataResponse(['press_id' => $press_id], 201);
+        
     }
 
-    public function show($id)
-    {
-        //
-    }
+
 
     public function update(Request $request, $id)
     {
-        $validated = Validator::make($request->all(), [
-            'title' => 'required',
-            'date' => 'required',
-            'file_uuid'=>'required'
-        ]);
 
-        if ($validated->fails()) {
-            return response(['message' => 'fail']);
-        }
-        // return response(['data',$request->title]);
+        DB::transaction(function () use ($request, $id) {
+            $press = Press::findOrFail($id);
 
-        try {
-            DB::transaction(function () use ($request, $id) {
-                Press::findOrFail($id)->update([
-                    'date'=>$request->date,
-                    'title'=>$request->title,
-                    'title_en'=>$request->title_en,
-                    'file_uuid'=>$request->file_uuid
-                ]);
-            });
-    
-            return $this->dataResponse(['message' => 'success']);
-        } catch (\Throwable $th) {
-            return response($th);
-        }
+            $press->fill($request->only([
+                'date',
+                'file_uuid'
+            ]));
 
+            $press->save();
+
+            $this->setLocales($request->input("locales"));
+        });
+
+        return $this->successResponse(trans('responses.ok'));
     }
 
     public function destroy($id)
     {
-        Press::findOrFail($id)->delete();
-        return response(['message'=>'success delete']);
+
+        DB::transaction(function () use ($id) {
+            $press = Press::findOrFail($id);
+
+            $press->pressLocales()->delete();
+
+            $press->delete();
+        });
+
+        return $this->successResponse(trans("responses.ok"));
+    }
+
+    public function show($id)
+    {
+        $press = Press::with('file', 'locales')->where('id', $id)->first();
+        return $this->dataResponse($press);
     }
 }

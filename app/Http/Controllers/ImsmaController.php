@@ -7,6 +7,7 @@ use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\ImsmaLocale;
 
 class ImsmaController extends Controller
 {
@@ -14,74 +15,64 @@ class ImsmaController extends Controller
 
     public function index()
     {
-        $imsmas = Imsma::query()->with('image')->get();
+        $imsmas = Imsma::query()->with('image' , 'locales')->get();
         return response($imsmas);
     }
 
     public function store(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'text' => 'required',
-            'image_uuid' => 'required',
-         ]);
-
-
-        if($validated->fails())
-        {
-            return response(['message' => 'validate fail']);
-        }
-
-        $employee_id = null;
-        DB::transaction(function () use ($request, &$employee_id) {
-            $employee = new Imsma();
-            $employee->fill($request->only([
-                'text',
-                'text_en',
+        $imsma_id = null;
+        DB::transaction(function () use ($request, &$imsma_id) {
+            $imsma = new Imsma();
+            $imsma->fill($request->only([
                 'image_uuid'
             ]));
-            $employee->save();
-            $employee_id = $employee->id;
+            $imsma->save();
+
+            $this->setLocales($request->input("locales"));
+
+            $imsma_id = $imsma->id;
         });
 
-        return $this->dataResponse(['employee_id' => $employee_id], 201);
+        return $this->dataResponse(['imsma_id' => $imsma_id], 201);
     }
 
-    public function show($id)
-    {
-        //
-    }
 
     public function update(Request $request, $id)
     {
-        $validated = Validator::make($request->all(), [
-            'text' => 'required',
-            'image_uuid' => 'required',
-         ]);
 
+        DB::transaction(function () use ($request, $id) {
+            $imsma = Imsma::findOrFail($id);
 
-        if($validated->fails())
-        {
-            return response(['message' => 'validate fail']);
-        }
+            $imsma->fill($request->only([
+                'image_uuid'
+            ]));
+            $imsma->save();
 
-        try {
-            DB::transaction(function () use ($request, $id) {
-                Imsma::findOrFail($id)->update([
-                    'text'=>$request->text,
-                    'text_en'=>$request->text_en,
-                    'image_uuid'=>$request->image_uuid
-                ]);
-            });
-    
-            return $this->dataResponse(['message' => 'success']);
-        } catch (\Throwable $th) {
-            return response($th);
-        }
+            $this->setLocales($request->input("locales"));
+        });
+
+        return $this->successResponse(trans('responses.ok'));
     }
 
     public function destroy($id)
     {
-        Imsma::findOrFail($id)->delete();
-        return response(['message'=>'success delete']);
+
+        DB::transaction(function () use ($id) {
+            $imsma = Imsma::findOrFail($id);
+
+            $imsma->imsmaLocales()->delete();
+
+            $imsma->delete();
+        });
+
+        return $this->successResponse(trans("responses.ok"));
+    }
+
+
+    public function show($id)
+    {
+        $imsma = Imsma::with('image' , 'locales')->where('id' , $id)->first();
+        return $this->dataResponse($imsma);
     }
 }

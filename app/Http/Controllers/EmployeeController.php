@@ -7,6 +7,7 @@ use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\EmployeeLocale;
 
 class EmployeeController extends Controller
 {
@@ -14,86 +15,66 @@ class EmployeeController extends Controller
 
     public function index()
     {
-        $employees = Employee::query()->with('image')->orderBy('order' , 'asc')->get();
+        $employees = Employee::query()->with('image', 'locales')->orderBy('order', 'asc')->get();
         return response($employees);
     }
 
-    
     public function store(Request $request)
     {
-        // $validated = Validator::make($request->all(), [
-        //     'text' => 'required',
-        //     // 'image_uuid' => 'required',
-        //     'position_name' => 'required',
-        //     'order' => 'required|numeric|unique:employees',
-        //     'position_name_en' => 'required'
-        //  ]);
-
-
-        // if($validated->fails())
-        // {
-        //     return response(['message' => 'validate fail']);
-        // }
-
         $employee_id = null;
         DB::transaction(function () use ($request, &$employee_id) {
             $employee = new Employee();
             $employee->fill($request->only([
-                'text',
-                'text_en',
-                'position_name',
-                'position_name_en',
                 'order',
                 'image_uuid'
             ]));
             $employee->save();
+
+            $this->setLocales($request->input("locales"));
+
             $employee_id = $employee->id;
         });
 
         return $this->dataResponse(['employee_id' => $employee_id], 201);
     }
 
-    public function show($id)
-    {
-        //
-    }
 
     public function update(Request $request, $id)
     {
-        $validated = Validator::make($request->all(), [
-            'text' => 'required',
-            'image_uuid' => 'required',
-            'position_name' => 'required',
-            'order' => 'required|numeric|unique:employees',
-            'position_name_en' => 'required'
-         ]);
 
-         if($validated->fails())
-         {
-             return response(['message' => 'validate fail']);
-         }
+        DB::transaction(function () use ($request, $id) {
+            $employee = Employee::findOrFail($id);
 
-        try {
-            DB::transaction(function () use ($request, $id) {
-                Employee::findOrFail($id)->update([
-                    'order'=>$request->order,
-                    'text'=>$request->text,
-                    'text_en'=>$request->text_en,
-                    'image_uuid'=>$request->image_uuid,
-                    'position_name'=>$request->position_name,
-                    'position_name_en'=>$request->position_name_en
-                ]);
-            });
-    
-            return $this->dataResponse(['message' => 'success']);
-        } catch (\Throwable $th) {
-            return response($th);
-        }
+            $employee->fill($request->only([
+                'order',
+                'image_uuid'
+            ]));
+            $employee->save();
+
+            $this->setLocales($request->input("locales"));
+        });
+
+        return $this->successResponse(trans('responses.ok'));
     }
 
     public function destroy($id)
     {
-        Employee::findOrFail($id)->delete();
-        return response(['message'=>'success delete']);
+
+        DB::transaction(function () use ($id) {
+            $employee = Employee::findOrFail($id);
+
+            $employee->employeeLocales()->delete();
+
+            $employee->delete();
+        });
+
+        return $this->successResponse(trans("responses.ok"));
+    }
+
+
+    public function show($id)
+    {
+        $employee = Employee::with('image', 'locales')->where('id', $id)->first();
+        return $this->dataResponse($employee);
     }
 }

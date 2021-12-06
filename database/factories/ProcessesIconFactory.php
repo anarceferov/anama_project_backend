@@ -18,7 +18,7 @@ class ProcessesIconFactory extends Factory
     {
         return [
             'text' => $this->faker->sentence(1,true),
-            'text_en' => $this->faker->sentence(1,true).'________EN',
+            // 'text_en' => $this->faker->sentence(1,true).'________EN',
             'image' => 'https://via.placeholder.com/400/00000/',
             'icon' => 'https://via.placeholder.com/400/00000/',
         ];

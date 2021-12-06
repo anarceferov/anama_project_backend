@@ -7,6 +7,7 @@ use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\ProcessLocale;
 
 class ProcessesController extends Controller
 {
@@ -14,72 +15,64 @@ class ProcessesController extends Controller
 
     public function index()
     {
-        $processes = Process::query()->with('image')->get();
+        $processes = Process::query()->with('image', 'locales')->get();
         return response($processes);
     }
 
     public function store(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'text' => 'required',
-            'image_uuid' =>'required',
-        ]);
+        $process_id = null;
 
-
-        if ($validated->fails()) {
-            return response(['message' => 'validate fail']);
-        }
-
-        $about_id = null;
-        DB::transaction(function () use ($request, &$about_id) {
-            $about = new Process();
-            $about->fill($request->only([
-                'text',
-                'text_en',
+        DB::transaction(function () use ($request, &$process_id) {
+            $process = new Process();
+            $process->fill($request->only([
                 'image_uuid'
             ]));
-            $about->save();
-            $about_id = $about->id;
+            $process->save();
+
+            $this->setLocales($request->input("locales"));
+
+            $process_id = $process->id;
         });
 
-        return $this->dataResponse(['about_id' => $about_id], 201);
+        return $this->dataResponse(['process_id' => $process_id], 201);
     }
 
-    public function show($id)
-    {
-        //
-    }
 
     public function update(Request $request, $id)
     {
-        $validated = Validator::make($request->all(), [
-            'text' => 'required',
-            'image_uuid' =>'required',
-        ]);
+        DB::transaction(function () use ($request, $id) {
+            $process = Process::findOrFail($id);
+            $process->fill($request->only([
+                'image_uuid'
+            ]));
 
+            $process->save();
 
-        if ($validated->fails()) {
-            return response(['message' => 'validate fail']);
-        }
-        
-        try {
-            DB::transaction(function () use ($request, $id) {
-                Process::findOrFail($id)->update([
-                    'text'=>$request->text,
-                    'text_en'=>$request->text_en,
-                    'image_uuid'=>$request->image_uuid
-                ]);
-            });
-    
-            return $this->dataResponse(['message' => 'success']);
-        } catch (\Throwable $th) {
-            return response($th);
-        }
+            $this->setLocales($request->input("locales"));
+        });
+
+        return $this->successResponse(trans('responses.ok'));
     }
 
     public function destroy($id)
     {
-        Process::findOrFail($id)->delete();
-        return response(['message'=>'success delete']);
+
+        DB::transaction(function () use ($id) {
+            $process = Process::findOrFail($id);
+
+            $process->processLocales()->delete();
+
+            $process->delete();
+        });
+
+        return $this->successResponse(trans("responses.ok"));
+    }
+
+
+    public function show($id)
+    {
+        $process = Process::with('image', 'locales')->where('id', $id)->first();
+        return $this->dataResponse($process);
     }
 }

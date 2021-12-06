@@ -16,12 +16,8 @@ class Employees extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->longText('text')->nullable();
-            $table->longText('text_en')->nullable();
-            $table->string('position_name')->nullable();
-            $table->string('position_name_en')->nullable();
             $table->integer('order')->unique()->nullable();
-            $table->foreignUuid("image_uuid")->constrained("files");
+            $table->foreignUuid("image_uuid")->constrained("files")->nullable();
             $table->smallInteger("status")->default(config("defaults.statuses.active"));
             $table->smallInteger("type")->default(GalleryType::PHOTO);
             $table->timestamps();

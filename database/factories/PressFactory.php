@@ -18,7 +18,7 @@ class PressFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(1,true),
-            'title_en' => $this->faker->sentence(1,true).'________EN',
+            // 'title_en' => $this->faker->sentence(1,true).'________EN',
             'file' => 'https://via.placeholder.com/400/00000/',
             'date' =>  $this->faker->year($max = 'now')
         ];

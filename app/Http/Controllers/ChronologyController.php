@@ -6,7 +6,7 @@ use App\Models\Chronology;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use App\Models\ChronologyLocale;
 
 class ChronologyController extends Controller
 {
@@ -14,80 +14,66 @@ class ChronologyController extends Controller
 
     public function index()
     {
-        $chronologies = Chronology::query()->with('image')->orderBy('date' , 'asc')->get();
+        $chronologies = Chronology::query()->with('image' , 'locales')->orderBy('date', 'asc')->get();
         return response($chronologies);
     }
 
     public function store(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'text' => 'required',
-            'image_uuid' => 'required'
-         ]);
-
-
-        if($validated->fails())
-        {
-            return response(['message' => 'fail']);
-        }
-
         $chronology_id = null;
         DB::transaction(function () use ($request, &$chronology_id) {
             $chronology = new Chronology();
             $chronology->fill($request->only([
-                'text',
-                'text_en',
                 'date',
                 'image_uuid'
             ]));
             $chronology->save();
+
+            $this->setLocales($request->input("locales"));
+
             $chronology_id = $chronology->id;
         });
 
-        return $this->dataResponse(['about_id' => $chronology_id], 201);
+        return $this->dataResponse(['chronology_id' => $chronology_id], 201);
     }
 
-    public function show($id)
-    {
-        //
-    }
+
 
     public function update(Request $request, $id)
     {
-        $validated = Validator::make($request->all(), [
-            'text' => 'required',
-            'date' => 'numeric',
-            'image_uuid' => 'required'
-         ]);
+        DB::transaction(function () use ($request, $id) {
+            $chronology = Chronology::findOrFail($id);
 
+            $chronology->fill($request->only([
+                'date',
+                'image_uuid'
+            ]));
+            $chronology->save();
 
-        if($validated->fails())
-        {
-            return response(['message' => 'fail']);
-        }
+            $this->setLocales($request->input("locales"));
+        });
 
-        try {
-            DB::transaction(function () use ($request, $id) {
-                $about = Chronology::findOrFail($id);
-    
-                $about->fill($request->only([
-                    'text',
-                    'text_en',
-                    'date',
-                    'image_uuid'
-                ]));
-                $about->save();
-            });
-
-            return $this->successResponse(trans('responses.ok'));
-        } catch (\Throwable $th) {
-            return response($th);
-        }
+        return $this->successResponse(trans('responses.ok'));
     }
-    
+
     public function destroy($id)
     {
-        Chronology::findOrFail($id)->delete();
-        return response(['message'=>'success delete']);
+
+        DB::transaction(function () use ($id) {
+            $chronology = Chronology::findOrFail($id);
+
+            $chronology->chronologyLocales()->delete();
+
+            $chronology->delete();
+        });
+
+        return $this->successResponse(trans("responses.ok"));
+    }
+
+
+    public function show($id)
+    {
+        $chronology = Chronology::with('image', 'locales')->where('id', $id)->first();
+        return $this->dataResponse($chronology);
     }
 }

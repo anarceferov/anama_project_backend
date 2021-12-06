@@ -18,7 +18,7 @@ class ProcessFactory extends Factory
     {
         return [
             'text' => $this->faker->sentence(2,true),
-            'text_en' => $this->faker->sentence(2,true).'________EN',
+            // 'text_en' => $this->faker->sentence(2,true).'________EN',
             'image' => 'https://via.placeholder.com/400/00000/',
         ];
     }
