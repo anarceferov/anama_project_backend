@@ -30,7 +30,7 @@ class PageController extends Controller
 
             $page->save();
 
-            $this->setLocales($request->input("locales"));
+            $page->setLocales($request->input("locales"));
         });
 
         return $this->successResponse(trans('responses.ok'));
@@ -48,7 +48,7 @@ class PageController extends Controller
             
             $page->save();
 
-            $this->setLocales($request->input("locales"));
+            $page->setLocales($request->input("locales"));
 
             $page_id = $page->id;
         });

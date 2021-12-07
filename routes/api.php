@@ -7,7 +7,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChronologyController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\ImsmaController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PressController;
 use App\Http\Controllers\ProcessesController;
@@ -15,6 +17,17 @@ use App\Http\Controllers\ProcessIconController;
 use App\Http\Controllers\QualityController;
 
 
+// FrontEnd Route
+
+// Route::middleware('locale')->group(function() {
+//     Route::get('/' , HomeController::class);
+
+// });
+
+
+
+
+//BackEnd Route
 Route::post('admin/login', [AuthController::class, 'login'])->name('login');
 
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -29,9 +42,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::apiResource('imsmas' , ImsmaController::class);
     Route::apiResource('chronologies' , ChronologyController::class);
     Route::apiResource('employees' , EmployeeController::class);
+    Route::apiResource('languages' , LanguageController::class);
     Route::apiResource('about/categories' , AboutCategoryController::class);
     Route::post("/image", [FileController::class, "uploadSingleImage"]);
     Route::post("/file", [FileController::class, "uploadFile"]);
 });
-
-// Front Route

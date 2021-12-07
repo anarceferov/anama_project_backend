@@ -29,7 +29,7 @@ class ChronologyController extends Controller
             ]));
             $chronology->save();
 
-            $this->setLocales($request->input("locales"));
+            $chronology->setLocales($request->input("locales"));
 
             $chronology_id = $chronology->id;
         });
@@ -50,7 +50,7 @@ class ChronologyController extends Controller
             ]));
             $chronology->save();
 
-            $this->setLocales($request->input("locales"));
+            $chronology->setLocales($request->input("locales"));
         });
 
         return $this->successResponse(trans('responses.ok'));

@@ -32,7 +32,7 @@ class PressController extends Controller
             
             $press->save();
 
-            $this->setLocales($request->input("locales"));
+            $press->setLocales($request->input("locales"));
 
             $press_id = $press->id;
         });
@@ -55,7 +55,7 @@ class PressController extends Controller
 
             $press->save();
 
-            $this->setLocales($request->input("locales"));
+            $press->setLocales($request->input("locales"));
         });
 
         return $this->successResponse(trans('responses.ok'));

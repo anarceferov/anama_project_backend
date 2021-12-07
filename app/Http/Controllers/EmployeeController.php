@@ -30,7 +30,7 @@ class EmployeeController extends Controller
             ]));
             $employee->save();
 
-            $this->setLocales($request->input("locales"));
+            $employee->setLocales($request->input("locales"));
 
             $employee_id = $employee->id;
         });
@@ -51,7 +51,7 @@ class EmployeeController extends Controller
             ]));
             $employee->save();
 
-            $this->setLocales($request->input("locales"));
+            $employee->setLocales($request->input("locales"));
         });
 
         return $this->successResponse(trans('responses.ok'));

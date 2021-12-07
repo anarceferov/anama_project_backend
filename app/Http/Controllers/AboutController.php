@@ -52,7 +52,7 @@ class AboutController extends Controller
             ]));
             $about->save();
 
-            $this->setLocales($request->input("locales"));
+            $about->setLocales($request->input("locales"));
         });
 
         return $this->successResponse(trans('responses.ok'));

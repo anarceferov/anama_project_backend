@@ -12,16 +12,11 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Baku',
 
-    'locale' => 'en',
+    'locale' => 'az',
 
-    'aviable_lan' => [
-        'az',
-        'en',
-    ],
-
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'az',
 
     'faker_locale' => 'en_US',
 

@@ -30,7 +30,7 @@ class ProcessesController extends Controller
             ]));
             $process->save();
 
-            $this->setLocales($request->input("locales"));
+            $process->setLocales($request->input("locales"));
 
             $process_id = $process->id;
         });
@@ -49,7 +49,7 @@ class ProcessesController extends Controller
 
             $process->save();
 
-            $this->setLocales($request->input("locales"));
+            $process->setLocales($request->input("locales"));
         });
 
         return $this->successResponse(trans('responses.ok'));

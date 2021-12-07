@@ -29,7 +29,7 @@ class ImsmaController extends Controller
             ]));
             $imsma->save();
 
-            $this->setLocales($request->input("locales"));
+            $imsma->setLocales($request->input("locales"));
 
             $imsma_id = $imsma->id;
         });
@@ -49,7 +49,7 @@ class ImsmaController extends Controller
             ]));
             $imsma->save();
 
-            $this->setLocales($request->input("locales"));
+            $imsma->setLocales($request->input("locales"));
         });
 
         return $this->successResponse(trans('responses.ok'));

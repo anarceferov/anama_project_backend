@@ -31,7 +31,7 @@ class QualityController extends Controller
             ]));
             $quality->save();
 
-            $this->setLocales($request->input("locales"));
+            $quality->setLocales($request->input("locales"));
 
             $quality_id = $quality->id;
         });
@@ -52,7 +52,7 @@ class QualityController extends Controller
 
             $quality->save();
 
-            $this->setLocales($request->input("locales"));
+            $quality->setLocales($request->input("locales"));
         });
 
         return $this->successResponse(trans('responses.ok'));
