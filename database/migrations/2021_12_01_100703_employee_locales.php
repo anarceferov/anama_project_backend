@@ -19,7 +19,6 @@ class EmployeeLocales extends Migration
             $table->longText('text')->nullable();
             $table->string('position_name');
             $table->string('local' , 3)->default('az');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -18,8 +18,6 @@ class Employees extends Migration
             $table->id();
             $table->integer('order')->unique()->nullable();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
-            $table->smallInteger("status")->default(config("defaults.statuses.active"));
-            $table->smallInteger("type")->default(GalleryType::PHOTO);
             $table->timestamps();
             $table->softDeletes();
         });

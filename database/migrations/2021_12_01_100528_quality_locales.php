@@ -18,7 +18,6 @@ class QualityLocales extends Migration
             $table->foreignId("quality_id")->constrained("qualities")->nullable()->onDelete('cascade');
             $table->longText('text')->nullable();
             $table->string('local' , 3)->default('az');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

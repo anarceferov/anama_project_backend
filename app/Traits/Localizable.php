@@ -9,27 +9,20 @@ use Illuminate\Support\Carbon;
 
 trait Localizable
 {
-    /**
-     * @return HasMany
-     */
+
     public function locales(): HasMany
     {
         return $this->hasMany($this->localeModel, $this->getForeignKey(), 'id');
     }
 
-    /**
-     * @return HasOne
-     */
+
     public function locale(): HasOne
     {
         return $this->hasOne($this->localeModel, $this->getForeignKey(), 'id')
             ->where('local', app()->getLocale());
     }
 
-    /**
-     * Set model locales
-     * @param array $locales
-     */
+
     public function setLocales(array $locales): void
     {
         $insertData = [];

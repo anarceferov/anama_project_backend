@@ -18,7 +18,6 @@ class PressLocales extends Migration
             $table->foreignId("press_id")->constrained("presses")->nullable()->onDelete('cascade');
             $table->string('title')->nullable();
             $table->string('local' , 3)->default('az');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

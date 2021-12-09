@@ -14,7 +14,6 @@ class AboutLocales extends Migration
             $table->foreignId("about_id")->constrained("abouts")->nullable()->onDelete('cascade');
             $table->longText('text')->nullable();
             $table->string('local' , 3)->default('az');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

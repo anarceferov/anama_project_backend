@@ -14,8 +14,6 @@ class Presses extends Migration
             $table->id();
             $table->date('date')->nullable(); // date make
             $table->foreignUuid("file_uuid")->constrained("files")->nullable();
-            $table->smallInteger("status")->default(config("defaults.statuses.active"));
-            $table->smallInteger("type")->default(GalleryType::PHOTO);
             $table->timestamps();
             $table->softDeletes();
         });

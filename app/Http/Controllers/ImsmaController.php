@@ -61,7 +61,7 @@ class ImsmaController extends Controller
         DB::transaction(function () use ($id) {
             $imsma = Imsma::findOrFail($id);
 
-            $imsma->imsmaLocales()->delete();
+            $imsma->locales()->delete();
 
             $imsma->delete();
         });

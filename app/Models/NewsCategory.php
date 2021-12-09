@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\Localizable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class NewsCategory extends Model
+{
+    use HasFactory, SoftDeletes, Localizable;
+    protected $localeModel = NewsCategoryLocale::class;
+    protected $keyType = 'integer';
+    protected $localableFields = ['name'];
+    protected $table = 'news_categories';
+
+    public function news()
+    {
+        return $this->hasMany(News::class , 'news_category_id')->with('locales');
+    }
+
+    public function OneNews()
+    {
+        return $this->hasMany(News::class , 'news_category_id')->with('locale');
+    }
+}

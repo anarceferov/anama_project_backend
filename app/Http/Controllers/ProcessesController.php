@@ -61,7 +61,7 @@ class ProcessesController extends Controller
         DB::transaction(function () use ($id) {
             $process = Process::findOrFail($id);
 
-            $process->processLocales()->delete();
+            $process->locales()->delete();
 
             $process->delete();
         });

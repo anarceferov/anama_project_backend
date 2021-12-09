@@ -18,7 +18,6 @@ class ChronologyLocales extends Migration
             $table->foreignId("chronology_id")->constrained("chronologies")->nullable()->onDelete('cascade');
             $table->longText('text')->nullable();
             $table->string('local' , 3)->default('az');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

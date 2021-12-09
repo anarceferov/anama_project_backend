@@ -62,7 +62,7 @@ class ChronologyController extends Controller
         DB::transaction(function () use ($id) {
             $chronology = Chronology::findOrFail($id);
 
-            $chronology->chronologyLocales()->delete();
+            $chronology->locales()->delete();
 
             $chronology->delete();
         });

@@ -66,7 +66,7 @@ class QualityController extends Controller
         DB::transaction(function () use ($id) {
             $quality = Quality::findOrFail($id);
 
-            $quality->qualityLocales()->delete();
+            $quality->locales()->delete();
 
             $quality->delete();
         });

@@ -17,8 +17,8 @@ class ProcessIconsLocales extends Migration
             $table->uuid("id")->primary()->unique()->index();
             $table->foreignId("process_icon_id")->constrained("processes_icons")->nullable()->onDelete('cascade');
             $table->longText('text')->nullable();
+            $table->string('title')->nullable();
             $table->string('local' , 3)->default('az');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

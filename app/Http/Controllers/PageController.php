@@ -15,7 +15,7 @@ class PageController extends Controller
 
     public function index()
     {
-        $pages = page::whereIsActive(1)->with('locales')->get();
+        $pages = page::whereIsActive(1)->with('locales' , 'subPage')->get();
         return response($pages);
     }
 
@@ -25,7 +25,8 @@ class PageController extends Controller
             $page = page::findOrFail($id);
 
             $page->fill($request->only([
-                'is_active'
+                'is_active',
+                'key'
             ]));
 
             $page->save();
@@ -43,9 +44,10 @@ class PageController extends Controller
         DB::transaction(function () use ($request, &$page_id) {
             $page = new Page();
             $page->fill($request->only([
-                'is_active'
+                'is_active',
+                'key'
             ]));
-            
+
             $page->save();
 
             $page->setLocales($request->input("locales"));
@@ -58,7 +60,17 @@ class PageController extends Controller
 
     public function show($id)
     {
-        $page = Page::with('locales')->where('id', $id)->first();
+        $page = Page::with('locales' , 'subPage')->where('id', $id)->first();
         return $this->dataResponse($page);
+    }
+
+    public function destroy($id)
+    {
+        DB::transaction(function () use ($id) {
+            $page = Page::findOrFail($id);
+            $page->locales()->delete();
+            $page->delete();
+        });
+        return $this->successResponse(trans('responses.ok'));
     }
 }

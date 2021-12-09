@@ -15,10 +15,9 @@ class PageLocales extends Migration
     {
         Schema::create('page_locales', function (Blueprint $table) {
             $table->uuid("id")->primary()->unique()->index();
-            $table->foreignId("page_id")->constrained("pages")->nullable()->onDelete('cascade');
+            $table->foreignId("page_id")->constrained("pages")->onDelete('cascade');
             $table->string('name')->nullable();
             $table->string('local' , 3)->default('az');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

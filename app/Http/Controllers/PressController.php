@@ -67,7 +67,7 @@ class PressController extends Controller
         DB::transaction(function () use ($id) {
             $press = Press::findOrFail($id);
 
-            $press->pressLocales()->delete();
+            $press->locales()->delete();
 
             $press->delete();
         });

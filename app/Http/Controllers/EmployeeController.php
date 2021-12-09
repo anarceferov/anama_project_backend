@@ -63,7 +63,7 @@ class EmployeeController extends Controller
         DB::transaction(function () use ($id) {
             $employee = Employee::findOrFail($id);
 
-            $employee->employeeLocales()->delete();
+            $employee->locales()->delete();
 
             $employee->delete();
         });

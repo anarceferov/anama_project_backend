@@ -17,8 +17,6 @@ class Imsmas extends Migration
         Schema::create('imsmas', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
-            $table->smallInteger("status")->default(config("defaults.statuses.active"));
-            $table->smallInteger("type")->default(GalleryType::PHOTO);
             $table->timestamps();
             $table->softDeletes();
         });

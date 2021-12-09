@@ -64,7 +64,7 @@ class AboutController extends Controller
         DB::transaction(function () use ($id) {
             $about = About::findOrFail($id);
 
-            $about->aboutLocales()->delete();
+            $about->locales()->delete();
 
             $about->delete();
         });
@@ -75,7 +75,7 @@ class AboutController extends Controller
 
     public function show($id)
     {
-        $about = About::with('image', 'category', 'locales')->where('id', $id)->first();
+        $about = About::with('image', 'category', 'locale')->where('id', $id)->first();
         return $this->dataResponse($about);
     }
 }

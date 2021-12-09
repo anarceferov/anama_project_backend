@@ -13,8 +13,6 @@ class Abouts extends Migration
         Schema::create('abouts', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
-            $table->smallInteger("status")->default(config("defaults.statuses.active"));
-            $table->smallInteger("type")->default(GalleryType::PHOTO);
             $table->bigInteger('about_category_id')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -67,7 +67,7 @@ class ProcessIconController extends Controller
         DB::transaction(function () use ($id) {
             $process_icon = ProcessIcon::findOrFail($id);
 
-            $process_icon->processIconLocales()->delete();
+            $process_icon->locales()->delete();
 
             $process_icon->delete();
         });
