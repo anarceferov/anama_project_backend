@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
+use App\Models\AllProject;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ProjectController extends Controller
+class AllProjectController extends Controller
 {
     use ApiResponder;
 
     public function index()
     {
-        $projects = Project::with('image', 'locales')->get();
-        return response($projects);
+        $project = AllProject::with('image', 'locales')->get();
+        return response($project);
     }
 
 
@@ -24,9 +24,9 @@ class ProjectController extends Controller
 
         $project_id = null;
         DB::transaction(function () use ($request, &$project_id) {
-            $project = new Project;
+            $project = new AllProject;
             $project->image_uuid = $request->image_uuid;
-            $project->project_category_id = $request->project_category_id;
+            $project->all_project_category_id = $request->all_project_category_id;
             $project->created_at = now();
             $project->save();
             $project->setLocales($request->input("locales"));
@@ -39,7 +39,7 @@ class ProjectController extends Controller
 
     public function show($id)
     {
-        $project = Project::with('image', 'locales')->where('id', $id)->first();
+        $project = AllProject::with('image', 'locales')->where('id', $id)->first();
         return $this->dataResponse($project);
     }
 
@@ -49,9 +49,9 @@ class ProjectController extends Controller
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
-            $project = Project::findOrFail($id);
+            $project = AllProject::findOrFail($id);
             $project->image_uuid = $request->image_uuid;
-            $project->project_category_id = $request->project_category_id;
+            $project->all_project_category_id = $request->all_project_category_id;
             $project->updated_at = now();
             $project->save();
             $project->setLocales($request->input("locales"));
@@ -64,7 +64,7 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
-            $project = Project::findOrFail($id);
+            $project = AllProject::findOrFail($id);
 
             $project->locales()->delete();
 
@@ -79,7 +79,7 @@ class ProjectController extends Controller
     {
         return [
             'image_uuid' => 'required|exists:files,id',
-            'project_category_id' => 'required|exists:project_categories,id',
+            'all_project_category_id' => 'required|exists:all_project_categories,id',
             'locales.*.local' => 'required',
             'locales.*.text' => 'required',
         ];
@@ -90,8 +90,8 @@ class ProjectController extends Controller
         return [
             'image_uuid.required' => 'İmage id mütləqdir',
             'image_uuid.exists' => 'İmage id mövcud deyil',
-            'project_category_id.required' => 'Kateqoriya id mütləqdir',
-            'project_category_id.exists' => 'Kateqoriya id mövcud deyil',
+            'all_project_category_id.required' => 'Kateqoriya id mütləqdir',
+            'all_project_category_id.exists' => 'Kateqoriya id mövcud deyil',
             'locales.*.text.required' => 'Mətn mütləqdir',
             'locales.*.local.required' => 'Dil seçimi mütləqdir'
         ];

@@ -8,15 +8,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\EmployeeLocale;
+use App\Traits\Paginatable;
 
 class EmployeeController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder,Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $employees = Employee::query()->with('image', 'locales')->orderBy('order', 'asc')->get();
-        return response($employees);
+        $employees = Employee::query()->with('image', 'locales')->orderBy('order', 'asc');
+        return $this->dataResponse($employees->simplePaginate($this->getPerPage()));
     }
 
     public function store(Request $request)
@@ -78,7 +81,7 @@ class EmployeeController extends Controller
 
     public function show($id)
     {
-        $employee = Employee::with('image', 'locales')->where('id', $id)->first();
+        $employee = Employee::with('image', 'locales')->findOrFail($id);
         return $this->dataResponse($employee);
     }
 

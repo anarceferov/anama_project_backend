@@ -3,11 +3,12 @@
 use App\Http\Controllers\AboutCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\AllProjectCategoryController;
+use App\Http\Controllers\AllProjectController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChronologyController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FileController;
-use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\ImsmaController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LegislationController;
@@ -62,8 +63,12 @@ Route::apiResource('trainings', TrainingController::class)->only('index');
 Route::apiResource('training/categories', TrainingCategoryController::class)->only('index');
 Route::apiResource('photos', PhotoController::class)->only('index');
 Route::apiResource('photo/folders', PhotoFolderController::class)->only('index');
+Route::apiResource('all/projects', ProjectController::class)->only('index');
+Route::apiResource('all/project/categories', ProjectCategoryController::class)->only('index');
 Route::apiResource('projects', ProjectController::class)->only('index');
 Route::apiResource('project/categories', ProjectCategoryController::class)->only('index');
+
+
 
 
 //BackEnd Route
@@ -96,6 +101,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::apiResource('training/categories', TrainingCategoryController::class);
     Route::apiResource('projects', ProjectController::class);
     Route::apiResource('project/categories', ProjectCategoryController::class);
+    Route::apiResource('all/projects', AllProjectController::class);
+    Route::apiResource('all/project/categories', AllProjectCategoryController::class);
     Route::apiResource('photos', PhotoController::class);
     Route::apiResource('photo/folders', PhotoFolderController::class);
     Route::post("/image", [FileController::class, "uploadSingleImage"]);
