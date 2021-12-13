@@ -6,24 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateTrainingsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('trainings', function (Blueprint $table) {
             $table->id();
+            $table->string('category_name')->nullable();
+            $table->integer('count')->nullable();
+            $table->string('tel' , 20)->nullable();
+            $table->string('email')->nullable();
+            $table->string('sector')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+
     public function down()
     {
         Schema::dropIfExists('trainings');

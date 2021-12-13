@@ -19,7 +19,6 @@ class CreatePhotosTable extends Migration
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
             $table->integer('order')->nullable()->unique();
             $table->bigInteger('photo_folder_id')->unsigned();
-            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('photo_folder_id')->references('id')->on('photo_folders')->onDelete('cascade');

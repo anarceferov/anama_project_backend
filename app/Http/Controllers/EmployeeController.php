@@ -21,6 +21,8 @@ class EmployeeController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+
         $employee_id = null;
         DB::transaction(function () use ($request, &$employee_id) {
             $employee = new Employee();
@@ -41,6 +43,8 @@ class EmployeeController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $employee = Employee::findOrFail($id);
@@ -76,5 +80,28 @@ class EmployeeController extends Controller
     {
         $employee = Employee::with('image', 'locales')->where('id', $id)->first();
         return $this->dataResponse($employee);
+    }
+
+
+    private function getValidationRules(): array
+    {
+        return [
+            'image_uuid' => 'required|exists:files,id',
+            'order' => 'required|numeric|unique:employees',
+            'locales.*.local' => 'required',
+            'locales.*.text' => 'required',
+            'locales.*.position_name' => 'required',
+        ];
+    }
+
+    public function customAttributes(): array
+    {
+        return [
+            'image_uuid.required' => 'İmage id mütləqdir',
+            'image_uuid.exists' => 'İmage id mövcud deyil',
+            'locales.*.text.required' => 'Mətn mütləqdir',
+            'locales.*.position_name.required' => 'Pozisiya mütləqdir',
+            'locales.*.local.required' => 'Dil seçimi mütləqdir'
+        ];
     }
 }

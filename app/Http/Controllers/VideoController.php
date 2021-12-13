@@ -21,6 +21,8 @@ class VideoController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+
         $video_id = null;
         DB::transaction(function () use ($request, &$video_id) {
             $video = new Video;
@@ -45,6 +47,8 @@ class VideoController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+
         DB::transaction(function () use ($request, $id) {
             $video = Video::findOrFail($id);
             $video->url = $request->url;
@@ -63,5 +67,23 @@ class VideoController extends Controller
             $video->delete();
         });
         return $this->successResponse(trans("responses.ok"));
+    }
+
+    private function getValidationRules(): array
+    {
+        return [
+            'url' => 'required',
+            'locales.*.local' => 'required',
+            'locales.*.title' => 'required',
+        ];
+    }
+
+    public function customAttributes(): array
+    {
+        return [
+            'url.required' => 'Url mütləqdir',
+            'locales.*.title.required' => 'Başlıq mütləqdir',
+            'locales.*.local.required' => 'Dil seçimi mütləqdir'
+        ];
     }
 }

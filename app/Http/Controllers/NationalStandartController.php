@@ -20,15 +20,15 @@ class NationalStandartController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+
         $nationalStandart_id = null;
         DB::transaction(function () use ($request, &$nationalStandart_id) {
-
             $nationalStandart = new NationalStandart();
-
+            $nationalStandart->created_at = now();
             $nationalStandart->national_standart_category_id = $request->national_standart_category_id;
             $nationalStandart->save();
             $nationalStandart->setLocales($request->locales);
-
             $nationalStandart_id = $nationalStandart->id;
         });
 
@@ -37,14 +37,17 @@ class NationalStandartController extends Controller
 
     public function show($id)
     {
-        $nationalStandart = NationalStandart::with('locale')->where('id' , $id)->get();
+        $nationalStandart = NationalStandart::with('locale')->where('id', $id)->get();
         return response($nationalStandart);
     }
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+
         DB::transaction(function () use ($request, $id) {
             $nationalStandart = NationalStandart::findOrFail($id);
+            $nationalStandart->updated_at = now();
             $nationalStandart->national_standart_category_id = $request->national_standart_category_id;
             $nationalStandart->save();
             $nationalStandart->setLocales($request->locales);
@@ -64,5 +67,25 @@ class NationalStandartController extends Controller
         });
 
         return $this->successResponse(trans("responses.ok"));
+    }
+
+
+    private function getValidationRules(): array
+    {
+        return [
+            'national_standart_category_id' => 'required|numeric|exists:national_standart_categories,id',
+            'locales.*.local' => 'required',
+            'locales.*.text' => 'required',
+        ];
+    }
+
+    public function customAttributes(): array
+    {
+        return [
+            'national_standart_category_id.required' => 'Kateqoriya adı mütləqdir',
+            'national_standart_category_id.exists' => 'Kateqoriya id mövcud deyil',
+            'locales.*.text.required' => 'Mətn mütləqdir',
+            'locales.*.local.required' => 'Dil seçimi mütləqdir'
+        ];
     }
 }

@@ -20,8 +20,12 @@ class AboutCategoryController extends Controller
 
     public function store(Request $request)
     {
+
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+
         AboutCategory::insert([
-            'date' => $request->date
+            'date' => $request->date,
+            'created_at' => now()
         ]);
 
         return $this->successResponse(trans('ok'));
@@ -30,8 +34,11 @@ class AboutCategoryController extends Controller
     public function update(Request $request, $id)
     {
 
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+
         AboutCategory::findOrFail($id)->update([
-            'date' => $request->date
+            'date' => $request->date,
+            'updated_at' => now()
         ]);
 
         return $this->successResponse(trans('ok'));
@@ -42,6 +49,7 @@ class AboutCategoryController extends Controller
         DB::transaction(function () use ($id) {
             $category = AboutCategory::findOrFail($id);
             $category->abouts()->delete();
+            $category->deletes()->delete();
             $category->delete();
         });
 
@@ -51,6 +59,20 @@ class AboutCategoryController extends Controller
 
     public function show($id)
     {
-        
+    }
+
+
+    private function getValidationRules(): array
+    {
+        return [
+            'date' => 'required|unique:about_categories|numeric',
+        ];
+    }
+
+    public function customAttributes(): array
+    {
+        return [
+            'date' => 'Tarix mütləqdir',
+        ];
     }
 }

@@ -19,9 +19,12 @@ class NationalStandartCategoryController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+
         $NationalStandartCategory_id = null;
         DB::transaction(function () use ($request, &$NationalStandartCategory_id) {
             $NationalStandartCategory = new NationalStandartCategory;
+            $NationalStandartCategory->created_at = now();
             $NationalStandartCategory->save();
             $NationalStandartCategory->setLocales($request->input("locales"));
             $NationalStandartCategory_id = $NationalStandartCategory->id;
@@ -38,8 +41,11 @@ class NationalStandartCategoryController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+
         DB::transaction(function () use ($request, $id) {
             $category = NationalStandartCategory::findOrFail($id);
+            $category->updated_at = now();
             $category->save();
             $category->setLocales($request->input("locales"));
         });
@@ -58,5 +64,22 @@ class NationalStandartCategoryController extends Controller
         });
 
         return $this->successResponse(trans("responses.ok"));
+    }
+
+
+    private function getValidationRules(): array
+    {
+        return [
+            'locales.*.local' => 'required',
+            'locales.*.name' => 'required',
+        ];
+    }
+
+    public function customAttributes(): array
+    {
+        return [
+            'locales.*.name.required' => 'Kateqoriya adı mütləqdir',
+            'locales.*.local.required' => 'Dil seçimi mütləqdir'
+        ];
     }
 }

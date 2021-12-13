@@ -6,24 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateTrainingCategoryLocalesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('training_category_locales', function (Blueprint $table) {
-            $table->id();
+            $table->uuid("id")->primary()->unique()->index();
+            $table->string('name');
+            $table->foreignId("training_category_id")->constrained("training_categories")->nullable()->onDelete('cascade');
+            $table->string('local' , 3)->default('az');
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+
     public function down()
     {
         Schema::dropIfExists('training_category_locales');

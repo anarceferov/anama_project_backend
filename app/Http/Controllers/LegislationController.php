@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Legislation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\LegislationLocale;
 use App\Traits\ApiResponder;
 
 class LegislationController extends Controller
@@ -20,9 +19,12 @@ class LegislationController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, $this->getValidationRules());
+
         $legislation_id = null;
         DB::transaction(function () use ($request, &$legislation_id) {
             $legislation = new Legislation;
+            $legislation->created_at = now();
             $legislation->save();
             $legislation->setLocales($request->input("locales"));
             $legislation_id = $legislation->id;
@@ -39,8 +41,11 @@ class LegislationController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, $this->getValidationRules());
+
         DB::transaction(function () use ($request, $id) {
             $legislation = Legislation::findOrFail($id);
+            $legislation->updated_at = now();
             $legislation->setLocales($request->input("locales"));
         });
 
@@ -59,4 +64,14 @@ class LegislationController extends Controller
 
         return $this->successResponse(trans("responses.ok"));
     }
+
+
+    private function getValidationRules(): array
+    {
+        return [
+            'locales.*.local' => 'required',
+            'locales.*.text' => 'required',
+        ];
+    }
+
 }

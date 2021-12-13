@@ -6,8 +6,7 @@ use App\Models\Page;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use App\Models\PageLocale;
+
 
 class PageController extends Controller
 {
@@ -15,12 +14,14 @@ class PageController extends Controller
 
     public function index()
     {
-        $pages = page::whereIsActive(1)->with('locales' , 'subPage')->get();
+        $pages = page::whereIsActive(1)->with('locales', 'subPage')->get();
         return response($pages);
     }
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+
         DB::transaction(function () use ($request, $id) {
             $page = page::findOrFail($id);
 
@@ -40,6 +41,9 @@ class PageController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+
         $page_id = null;
         DB::transaction(function () use ($request, &$page_id) {
             $page = new Page();
@@ -60,7 +64,7 @@ class PageController extends Controller
 
     public function show($id)
     {
-        $page = Page::with('locales' , 'subPage')->where('id', $id)->first();
+        $page = Page::with('locales')->where('id', $id)->first();
         return $this->dataResponse($page);
     }
 
@@ -68,9 +72,31 @@ class PageController extends Controller
     {
         DB::transaction(function () use ($id) {
             $page = Page::findOrFail($id);
+            $page->subPage()->delete();
             $page->locales()->delete();
             $page->delete();
         });
         return $this->successResponse(trans('responses.ok'));
     }
+
+
+    private function getValidationRules(): array
+    {
+        return [
+            'is_active' => 'required|boolean',
+            'locales.*.local' => 'required',
+            'locales.*.name' => 'required',
+        ];
+    }
+
+    public function customAttributes(): array
+    {
+        return [
+            'is_active.required' => 'Status',
+            'is_active.boolean' => 'Status 1 və ya 0 ola bilər',
+            'locales.*.name.required' => 'Sehifə adı mütləqdir',
+            'locales.*.local.required' => 'Dil seçimi mütləqdir'
+        ];
+    }
+
 }

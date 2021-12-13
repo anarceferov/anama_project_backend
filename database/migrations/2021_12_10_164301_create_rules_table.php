@@ -1,11 +1,10 @@
 <?php
 
-use App\Enums\GalleryType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Employees extends Migration
+class CreateRulesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +13,9 @@ class Employees extends Migration
      */
     public function up()
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('rules', function (Blueprint $table) {
             $table->id();
-            $table->integer('order')->unique()->nullable();
-            $table->foreignUuid("image_uuid")->constrained("files")->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ class Employees extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('rules');
     }
 }

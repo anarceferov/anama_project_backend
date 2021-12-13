@@ -20,6 +20,9 @@ class PressController extends Controller
 
     public function store(Request $request)
     {
+
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+
         $press_id = null;
 
         DB::transaction(function () use ($request, &$press_id) {
@@ -44,6 +47,7 @@ class PressController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $press = Press::findOrFail($id);
@@ -79,5 +83,27 @@ class PressController extends Controller
     {
         $press = Press::with('file', 'locales')->where('id', $id)->first();
         return $this->dataResponse($press);
+    }
+
+
+    private function getValidationRules(): array
+    {
+        return [
+            'date' => 'required',
+            'file_uuid' => 'required|exists:files,id',
+            'locales.*.local' => 'required',
+            'locales.*.title' => 'required',
+        ];
+    }
+
+    public function customAttributes(): array
+    {
+        return [
+            'date.required' => 'Tarix mütləqdir',
+            'file_uuid.required' => 'File id mütləqdir',
+            'file_uuid.exists' => 'File id mövcud deyil',
+            'locales.*.title.required' => 'Başlıq mütləqdir',
+            'locales.*.local.required' => 'Dil seçimi mütləqdir'
+        ];
     }
 }

@@ -20,6 +20,8 @@ class SubPagesController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+
         $subPage_id = null;
         DB::transaction(function () use ($request, &$subPage_id) {
             $subPage = new SubPage;
@@ -49,6 +51,8 @@ class SubPagesController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+
         DB::transaction(function () use ($request, $id) {
             $subPage = SubPage::findOrFail($id);
 
@@ -76,5 +80,25 @@ class SubPagesController extends Controller
         });
 
         return $this->successResponse(trans('responses.ok'));
+    }
+
+    private function getValidationRules(): array
+    {
+        return [
+            'page_id' => 'required|numeric',
+            'is_active' => 'required|boolean',
+            'locales.*.local' => 'required',
+            'locales.*.name' => 'required',
+        ];
+    }
+
+    public function customAttributes(): array
+    {
+        return [
+            'is_active.required' => 'Status',
+            'is_active.boolean' => 'Status 1 və ya 0 ola bilər',
+            'locales.*.name.required' => 'Sehifə adı mütləqdir',
+            'locales.*.local.required' => 'Dil seçimi mütləqdir'
+        ];
     }
 }

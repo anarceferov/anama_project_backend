@@ -14,12 +14,14 @@ class ChronologyController extends Controller
 
     public function index()
     {
-        $chronologies = Chronology::query()->with('image' , 'locales')->orderBy('date', 'asc')->get();
+        $chronologies = Chronology::query()->with('image', 'locales')->orderBy('date', 'asc')->get();
         return response($chronologies);
     }
 
     public function store(Request $request)
     {
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+
         $chronology_id = null;
         DB::transaction(function () use ($request, &$chronology_id) {
             $chronology = new Chronology();
@@ -41,6 +43,8 @@ class ChronologyController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+
         DB::transaction(function () use ($request, $id) {
             $chronology = Chronology::findOrFail($id);
 
@@ -75,5 +79,27 @@ class ChronologyController extends Controller
     {
         $chronology = Chronology::with('image', 'locales')->where('id', $id)->first();
         return $this->dataResponse($chronology);
+    }
+
+
+    private function getValidationRules(): array
+    {
+        return [
+            'image_uuid' => 'required|exists:files,id',
+            'date' => 'required',
+            'locales.*.local' => 'required',
+            'locales.*.text' => 'required',
+        ];
+    }
+
+    public function customAttributes(): array
+    {
+        return [
+            'image_uuid.required' => 'İmage id mütləqdir',
+            'image_uuid.exists' => 'İmage id mövcud deyil',
+            'date' => 'Tarix mütləqdir',
+            'locales.*.text.required' => 'Mətn mütləqdir',
+            'locales.*.local.required' => 'Dil seçimi mütləqdir'
+        ];
     }
 }

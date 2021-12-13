@@ -21,6 +21,8 @@ class ProcessesController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+
         $process_id = null;
 
         DB::transaction(function () use ($request, &$process_id) {
@@ -41,6 +43,9 @@ class ProcessesController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+
         DB::transaction(function () use ($request, $id) {
             $process = Process::findOrFail($id);
             $process->fill($request->only([
@@ -74,5 +79,25 @@ class ProcessesController extends Controller
     {
         $process = Process::with('image', 'locales')->where('id', $id)->first();
         return $this->dataResponse($process);
+    }
+
+
+    private function getValidationRules(): array
+    {
+        return [
+            'image_uuid' => 'required|exists:files,id',
+            'locales.*.local' => 'required',
+            'locales.*.text' => 'required',
+        ];
+    }
+
+    public function customAttributes(): array
+    {
+        return [
+            'image_uuid.required' => 'İmage id mütləqdir',
+            'image_uuid.exists' => 'İmage id mövcud deyil',
+            'locales.*.text.required' => 'Mətn mütləqdir',
+            'locales.*.local.required' => 'Dil seçimi mütləqdir'
+        ];
     }
 }

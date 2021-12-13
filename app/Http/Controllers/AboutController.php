@@ -24,6 +24,8 @@ class AboutController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+
         $about_id = null;
         DB::transaction(function () use ($request, &$about_id) {
 
@@ -31,6 +33,7 @@ class AboutController extends Controller
 
             $about->image_uuid = $request->image_uuid;
             $about->about_category_id = $request->about_category_id;
+            $about->created_at = now();
             $about->save();
             $about->setLocales($request->locales);
 
@@ -43,6 +46,8 @@ class AboutController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+
         DB::transaction(function () use ($request, $id) {
             $about = About::findOrFail($id);
 
@@ -77,5 +82,27 @@ class AboutController extends Controller
     {
         $about = About::with('image', 'category', 'locale')->where('id', $id)->first();
         return $this->dataResponse($about);
+    }
+
+    private function getValidationRules(): array
+    {
+        return [
+            'about_category_id' => 'required|numeric|exists:about_categories,id',
+            'image_uuid' => 'required|exists:files,id',
+            'locales.*.local' => 'required',
+            'locales.*.text' => 'required',
+        ];
+    }
+
+    public function customAttributes(): array
+    {
+        return [
+            'about_category_id.required' => 'Kateqoriya adı mütləqdir',
+            'about_category_id.exists' => 'Kateqoriya id mövcud deyil',
+            'image_uuid.required' => 'Image id mütləqdir',
+            'image_uuid.exists' => 'Image id mövcud deyil',
+            'locales.*.text.required' => 'Mətn mütləqdir',
+            'locales.*.local.required' => 'Dil seçimi mütləqdir'
+        ];
     }
 }

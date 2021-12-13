@@ -6,11 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreatePhotoFolderLocalesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('photo_folder_locales', function (Blueprint $table) {
@@ -22,11 +18,7 @@ class CreatePhotoFolderLocalesTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+
     public function down()
     {
         Schema::dropIfExists('photo_folder_locales');

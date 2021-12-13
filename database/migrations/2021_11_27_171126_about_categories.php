@@ -12,7 +12,6 @@ class AboutCategories extends Migration
         Schema::create('about_categories', function (Blueprint $table) {
             $table->id();
             $table->integer('date')->unique();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Training extends Model
+class Rule extends Model
 {
     use HasFactory , SoftDeletes , Localizable;
-    protected $fillable = ['category_name' , 'count' , 'tel' , 'email' , 'sector'];
+    protected $localeModel = RuleLocale::class;
+    protected $localableFields = ['text'];
+    protected $keyType = 'integer';
 }
