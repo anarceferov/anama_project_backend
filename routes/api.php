@@ -21,6 +21,8 @@ use App\Http\Controllers\PhotoFolderController;
 use App\Http\Controllers\PressController;
 use App\Http\Controllers\ProcessesController;
 use App\Http\Controllers\ProcessIconController;
+use App\Http\Controllers\ProjectCategoryController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\QualityController;
 use App\Http\Controllers\SubPagesController;
 use App\Http\Controllers\VideoController;
@@ -36,6 +38,33 @@ use App\Http\Controllers\TrainingController;
 // });
 
 Route::apiResource('trainings', TrainingController::class)->only('store');
+Route::apiResource('pages', PageController::class)->only('index');
+Route::apiResource('rules', RuleController::class)->only('index');
+Route::apiResource('sub/pages', SubPagesController::class)->only('index');
+Route::apiResource('work/abouts', WorkAboutController::class)->only('index');
+Route::apiResource('videos', VideoController::class)->only('index');
+Route::apiResource('presses', PressController::class)->only('index');
+Route::apiResource('processesIcons', ProcessIconController::class)->only('index');
+Route::apiResource('processes', ProcessesController::class)->only('index');
+Route::apiResource('qualities', QualityController::class)->only('index');
+Route::apiResource('imsmas', ImsmaController::class)->only('index');
+Route::apiResource('chronologies', ChronologyController::class)->only('index');
+Route::apiResource('employees', EmployeeController::class)->only('index');
+Route::apiResource('languages', LanguageController::class)->only('index');
+Route::apiResource('legislations', LegislationController::class)->only('index');
+Route::apiResource('abouts', AboutController::class)->only('index');
+Route::apiResource('about/categories', AboutCategoryController::class)->only('index');
+Route::apiResource('national/standarts', NationalStandartController::class)->only('index');
+Route::apiResource('national/standart/categories', NationalStandartCategoryController::class)->only('index');
+Route::apiResource('news', NewsController::class)->only('index');
+Route::apiResource('news/categories', NewsCategoryController::class)->only('index');
+Route::apiResource('trainings', TrainingController::class)->only('index');
+Route::apiResource('training/categories', TrainingCategoryController::class)->only('index');
+Route::apiResource('photos', PhotoController::class)->only('index');
+Route::apiResource('photo/folders', PhotoFolderController::class)->only('index');
+Route::apiResource('projects', ProjectController::class)->only('index');
+Route::apiResource('project/categories', ProjectCategoryController::class)->only('index');
+
 
 //BackEnd Route
 Route::post('admin/login', [AuthController::class, 'login'])->name('login');
@@ -65,6 +94,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::apiResource('news/categories', NewsCategoryController::class);
     Route::apiResource('trainings', TrainingController::class);
     Route::apiResource('training/categories', TrainingCategoryController::class);
+    Route::apiResource('projects', ProjectController::class);
+    Route::apiResource('project/categories', ProjectCategoryController::class);
     Route::apiResource('photos', PhotoController::class);
     Route::apiResource('photo/folders', PhotoFolderController::class);
     Route::post("/image", [FileController::class, "uploadSingleImage"]);

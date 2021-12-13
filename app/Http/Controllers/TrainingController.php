@@ -20,7 +20,7 @@ class TrainingController extends Controller
     public function store(Request $request)
     {
 
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $training = new Training;
         $training->category_name = $request->category_name;
@@ -45,7 +45,7 @@ class TrainingController extends Controller
     public function update(Request $request, $id)
     {
 
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $training = training::findOrFail($id);
         $training->category_name = $request->category_name;
@@ -71,7 +71,7 @@ class TrainingController extends Controller
             'category_name' => 'required',
             'count' => 'required|numeric|max:1000',
             'tel' => 'required',
-            'email' => 'required',
+            'email' => 'required|email',
             'sector' => 'required',
         ];
     }
