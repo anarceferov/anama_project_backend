@@ -4,17 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\NationalStandartCategory;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class NationalStandartCategoryController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $categories = NationalStandartCategory::with('nationalStandarts')->get();
-        return response($categories);
+        if (auth()->check()) {
+            $categories = NationalStandartCategory::with('nationalStandarts', 'locales');
+        } else {
+            $categories = NationalStandartCategory::with('nationalStandart', 'locale');
+        }
+        return $this->dataResponse($categories->simplePaginate($this->getPerPage()));
     }
 
     public function store(Request $request)
@@ -35,7 +42,11 @@ class NationalStandartCategoryController extends Controller
 
     public function show($id)
     {
-        $category = NationalStandartCategory::with('nationalStandart')->where('id', $id)->first();
+        if (auth()->check()) {
+            $category = NationalStandartCategory::with('nationalStandarts', 'locales')->findOrFail($id);
+        } else {
+            $category = NationalStandartCategory::with('nationalStandart', 'locale')->findOrFail($id);
+        }
         return $this->dataResponse($category);
     }
 

@@ -7,24 +7,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Traits\ApiResponder;
 use App\Models\AboutCategory;
-use Illuminate\Support\Facades\Validator;
-use App\Models\AboutLocale;
-use App\Traits\Localizable;
+use App\Traits\Paginatable;
 
 class AboutController extends Controller
 {
-    use ApiResponder;
-
+    use ApiResponder, Paginatable;
+    private $perPage;
     public function index()
     {
-        $about = AboutCategory::with('abouts')->get();
-        return response($about);
+        if (auth()->check()) {
+            $about = AboutCategory::with('abouts');
+        } else {
+            $about = AboutCategory::with('about');
+        }
+        return $this->dataResponse($about->simplePaginate($this->getPerPage()));
     }
 
 
     public function store(Request $request)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $about_id = null;
         DB::transaction(function () use ($request, &$about_id) {
@@ -46,7 +48,7 @@ class AboutController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $about = About::findOrFail($id);
@@ -80,7 +82,11 @@ class AboutController extends Controller
 
     public function show($id)
     {
-        $about = About::with('image', 'category', 'locale')->where('id', $id)->first();
+        if (auth()->check()) {
+            $about = About::with('image', 'category', 'locales')->findOrFail($id);
+        } else {
+            $about = About::with('image', 'category', 'locale')->findOrFail($id);
+        }
         return $this->dataResponse($about);
     }
 

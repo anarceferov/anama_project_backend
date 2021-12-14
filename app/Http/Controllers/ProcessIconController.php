@@ -6,8 +6,6 @@ use App\Models\ProcessIcon;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use App\Models\ProcessIconLocale;
 
 class ProcessIconController extends Controller
 {
@@ -15,8 +13,12 @@ class ProcessIconController extends Controller
 
     public function index()
     {
-        $ProcessIcons = ProcessIcon::query()->with('image', 'icon', 'locales')->get();
-        return response($ProcessIcons);
+        if (auth()->check()) {
+            $ProcessIcons = ProcessIcon::with('image', 'icon', 'locales')->get();
+        } else {
+            $ProcessIcons = ProcessIcon::with('image', 'icon', 'locale')->get();
+        }
+        return $this->dataResponse($ProcessIcons);
     }
 
     public function store(Request $request)
@@ -81,7 +83,11 @@ class ProcessIconController extends Controller
 
     public function show($id)
     {
-        $processIcon = ProcessIcon::with('icon', 'image', 'locales')->where('id', $id)->first();
+        if (auth()->check()) {
+            $processIcon = ProcessIcon::with('icon', 'image', 'locales')->findOrFail($id);
+        } else {
+            $processIcon = ProcessIcon::with('icon', 'image', 'locale')->findOrFail($id);
+        }
         return $this->dataResponse($processIcon);
     }
 

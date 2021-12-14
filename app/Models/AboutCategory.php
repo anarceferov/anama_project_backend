@@ -19,6 +19,13 @@ class AboutCategory extends Model
         return $this->hasMany(About::class, 'about_category_id')->with('locales' , 'image');
     }
 
+    public function about()
+    {
+        return $this->hasMany(About::class, 'about_category_id')->with('locale' , 'image');
+    }
+
+
+
     public function deletes()
     {
         return $this->hasMany(AboutLocale::class , 'about_id');

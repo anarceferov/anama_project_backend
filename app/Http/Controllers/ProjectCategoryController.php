@@ -14,8 +14,13 @@ class ProjectCategoryController extends Controller
 
     public function index()
     {
-        $categories = ProjectCategory::with('image', 'locales' , 'project')->get();
-        return response($categories);
+
+        if (auth()->check()) {
+            $categories = ProjectCategory::with('image', 'locales', 'projects')->get();
+        } else {
+            $categories = ProjectCategory::with('image', 'locale', 'project')->get();
+        }
+        return $this->dataResponse($categories);
     }
 
 
@@ -39,7 +44,11 @@ class ProjectCategoryController extends Controller
 
     public function show($id)
     {
-        $category = ProjectCategory::with('image', 'locales' , 'project')->where('id', $id)->first();
+        if (auth()->check()) {
+            $category = ProjectCategory::with('image', 'locales', 'projects')->findOrFail($id);
+        } else {
+            $category = ProjectCategory::with('image', 'locale', 'project')->findOrFail($id);
+        }
         return $this->dataResponse($category);
     }
 

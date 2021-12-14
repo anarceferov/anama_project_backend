@@ -4,24 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class VideoController extends Controller
 {
 
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $videos = Video::with('locales')->get();
-        return response($videos);
+        if (auth()->check()) {
+            $videos = Video::with('locales')->get();
+        } else {
+            $videos = Video::with('locale')->get();
+        }
+        return $this->dataResponse($videos);
     }
 
 
     public function store(Request $request)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $video_id = null;
         DB::transaction(function () use ($request, &$video_id) {
@@ -40,14 +47,18 @@ class VideoController extends Controller
 
     public function show($id)
     {
-        $video = Video::with('locales')->whereId($id)->get();
-        return response($video);
+        if (auth()->check()) {
+            $video = Video::with('locales')->findOrFail($id);
+        } else {
+            $video = Video::with('locale')->findOrFail($id);
+        }
+        return $this->dataResponse($video);
     }
 
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $video = Video::findOrFail($id);

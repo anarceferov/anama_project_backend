@@ -8,15 +8,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\QualityLocale;
+use App\Traits\Paginatable;
 
 class QualityController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $qualities = Quality::query()->with('image', 'locales')->get();
-        return response($qualities);
+        if (auth()->check()) {
+            $qualities = Quality::with('image', 'locales');
+        } else {
+            $qualities = Quality::with('image', 'locale');
+        }
+        return $this->dataResponse($qualities->simplePaginate($this->getPerPage()));
     }
 
 
@@ -79,7 +86,11 @@ class QualityController extends Controller
 
     public function show($id)
     {
-        $quality = Quality::with('image' , 'locales')->where('id' , $id)->first();
+        if (auth()->check()) {
+            $quality = Quality::with('image', 'locales')->findOrFail($id);
+        } else {
+            $quality = Quality::with('image', 'locale')->findOrFail($id);
+        }
         return $this->dataResponse($quality);
     }
 

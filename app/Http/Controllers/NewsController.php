@@ -5,23 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\News;
 use App\Models\NewsCategory;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class NewsController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $news = NewsCategory::with('news')->get();
-        return response($news);
+        if (auth()->check()) {
+            $news = NewsCategory::with('news');
+        } else {
+            $news = NewsCategory::with('oneNews');
+        }
+        return $this->dataResponse($news->simplePaginate($this->getPerPage()));
     }
 
 
     public function store(Request $request)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $news_id = null;
         DB::transaction(function () use ($request, &$news_id) {
@@ -44,14 +51,18 @@ class NewsController extends Controller
 
     public function show($id)
     {
-        $news = News::with('image' , 'locales' , 'category')->where('id', $id)->first();
+        if (auth()->check()) {
+            $news = News::with('image', 'locales', 'category')->findOrFail($id);
+        } else {
+            $news = News::with('image', 'locale', 'category')->findOrFail($id);
+        }
         return $this->dataResponse($news);
     }
 
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $news = News::findOrFail($id);

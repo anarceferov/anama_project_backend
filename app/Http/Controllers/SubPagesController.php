@@ -4,23 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\SubPage;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SubPagesController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $subPages = SubPage::whereIsActive(1)->with('locales' , 'page')->get();
-        return response($subPages);
+        if (auth()->check()) {
+            $subPages = SubPage::whereIsActive(1)->with('locales', 'pages');
+        } else {
+            $subPages = SubPage::whereIsActive(1)->with('locale', 'page');
+        }
+        return $this->dataResponse($subPages->simplePaginate($this->getPerPage()));
     }
 
 
     public function store(Request $request)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $subPage_id = null;
         DB::transaction(function () use ($request, &$subPage_id) {
@@ -44,14 +51,18 @@ class SubPagesController extends Controller
 
     public function show($id)
     {
-        $subPages = SubPage::find($id)->where('is_active' , 1)->with('locales' , 'page')->first();
-        return response($subPages);
+        if (auth()->check()) {
+            $subPages = SubPage::where('is_active', 1)->with('locales', 'pages')->findOrFail($id);
+        } else {
+            $subPages = SubPage::where('is_active', 1)->with('locale', 'page')->findOrFail($id);
+        }
+        return $this->dataResponse($subPages);
     }
 
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $subPage = SubPage::findOrFail($id);

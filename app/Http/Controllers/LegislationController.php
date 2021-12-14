@@ -6,15 +6,22 @@ use App\Models\Legislation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 
 class LegislationController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $legislations = Legislation::query()->with('locales')->get();
-        return response($legislations);
+        if (auth()->check()) {
+            $legislations = Legislation::with('locales');
+        } else {
+            $legislations = Legislation::with('locale');
+        }
+        return $this->dataResponse($legislations->simplePaginate($this->getPerPage()));
     }
 
     public function store(Request $request)
@@ -35,7 +42,11 @@ class LegislationController extends Controller
 
     public function show($id)
     {
-        $legislation = Legislation::with('locales')->where('id', $id)->first();
+        if (auth()->check()) {
+            $legislation = Legislation::with('locales')->findOrFail($id);
+        } else {
+            $legislation = Legislation::with('locale')->findOrFail($id);
+        }
         return $this->dataResponse($legislation);
     }
 

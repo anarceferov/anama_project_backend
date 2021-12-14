@@ -3,8 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Validation\ValidationException;
-use Nette\Utils\Validators;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 
 trait Paginatable

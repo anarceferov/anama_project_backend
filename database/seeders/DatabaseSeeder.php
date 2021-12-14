@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\PageSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\ChronologySeeder;
+use Database\Seeders\RegionSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             // PageSeeder::class,
             UserSeeder::class,
+            RegionSeeder::class,
             // EmployeeSeeder::class,
             // AboutSeeder::class,
             // ChronologySeeder::class,

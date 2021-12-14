@@ -4,16 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Training;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 
 class TrainingController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $trainings = Training::orderBy('created_at', 'desc')->get();
-        return response($trainings);
+        if (auth()->check()) {
+            $trainings = Training::orderBy('created_at', 'desc');
+        } else {
+            $trainings = Training::orderBy('created_at', 'desc');
+        }
+        return $this->dataResponse($trainings->simplePaginate($this->getPerPage()));
     }
 
 
@@ -25,7 +32,7 @@ class TrainingController extends Controller
         $training = new Training;
         $training->category_name = $request->category_name;
         $training->count = $request->count;
-        $training->tel = $request->tel;
+        $training->tel = $request->tel; 
         $training->email = $request->email;
         $training->sector = $request->sector;
         $training->created_at = now();
@@ -37,8 +44,13 @@ class TrainingController extends Controller
 
     public function show($id)
     {
-        $training = Training::whereId($id)->get();
-        return response($training);
+
+        if (auth()->check()) {
+            $training = Training::findOrFail($id);
+        } else {
+            $training = Training::findOrFail($id);
+        }
+        return $this->dataResponse($training);
     }
 
 

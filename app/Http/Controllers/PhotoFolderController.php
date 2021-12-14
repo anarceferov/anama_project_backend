@@ -12,8 +12,13 @@ class PhotoFolderController extends Controller
     use ApiResponder;
     public function index()
     {
-        $photos = PhotoFolder::with('locales' , 'photos')->orderBy('created_at' , 'desc')->get();
-        return response($photos);
+
+        if (auth()->check()) {
+            $photos = PhotoFolder::with('locales' , 'photos' , 'image')->orderBy('created_at' , 'desc')->get();
+        } else {
+            $photos = PhotoFolder::with('locale' , 'photos' , 'image')->orderBy('created_at' , 'desc')->get();
+        }
+        return $this->dataResponse($photos);
     }
 
 
@@ -40,8 +45,12 @@ class PhotoFolderController extends Controller
 
     public function show($id)
     {
-        $photoFolder = PhotoFolder::with('locales' , 'photos')->whereId($id)->get();
-        return response($photoFolder);
+        if (auth()->check()) {
+            $photoFolder = PhotoFolder::with('locales' , 'photos')->findOrFail($id);
+        } else {
+            $photoFolder = PhotoFolder::with('locale' , 'photos')->findOrFail($id);
+        }
+        return $this->dataResponse($photoFolder);
     }
 
 

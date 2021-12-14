@@ -5,22 +5,29 @@ namespace App\Http\Controllers;
 use App\Models\NationalStandart;
 use App\Models\NationalStandartCategory;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class NationalStandartController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $nationalStandart = NationalStandartCategory::with('nationalStandarts')->get();
-        return response($nationalStandart);
+        if (auth()->check()) {
+            $nationalStandart = NationalStandartCategory::with('nationalStandarts');
+        } else {
+            $nationalStandart = NationalStandartCategory::with('nationalStandart');
+        }
+        return $this->dataResponse($nationalStandart->simplePaginate($this->getPerPage()));
     }
 
     public function store(Request $request)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $nationalStandart_id = null;
         DB::transaction(function () use ($request, &$nationalStandart_id) {
@@ -37,13 +44,17 @@ class NationalStandartController extends Controller
 
     public function show($id)
     {
-        $nationalStandart = NationalStandart::with('locale')->where('id', $id)->get();
-        return response($nationalStandart);
+        if (auth()->check()) {
+            $nationalStandart = NationalStandart::with('locales')->findOrFail($id);
+        } else {
+            $nationalStandart = NationalStandart::with('locale')->findOrFail($id);
+        }
+        return $this->dataResponse($nationalStandart);
     }
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $nationalStandart = NationalStandart::findOrFail($id);

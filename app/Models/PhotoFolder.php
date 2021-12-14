@@ -19,4 +19,9 @@ class PhotoFolder extends Model
     {
         return $this->hasMany(Photo::class);
     }
+
+    public function image()
+    {
+        return $this->belongsTo(File::class , 'image_uuid');
+    }
 }

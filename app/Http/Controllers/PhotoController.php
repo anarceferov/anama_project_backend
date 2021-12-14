@@ -5,23 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\Photo;
 use App\Models\PhotoFolder;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 
 class PhotoController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $photos = PhotoFolder::with('locales' , 'photos')->orderBy('created_at' , 'desc')->get();
-        return response($photos);
+        if (auth()->check()) {
+            $photos = PhotoFolder::with('locales', 'photos')->orderBy('created_at', 'desc')->get();
+        } else {
+            $photos = PhotoFolder::with('locale', 'photos')->orderBy('created_at', 'desc')->get();
+        }
+        return $this->dataResponse($photos);
     }
 
 
     public function store(Request $request)
     {
 
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $photo_id = null;
         $photo = new Photo;
@@ -46,7 +53,7 @@ class PhotoController extends Controller
     public function update(Request $request, $id)
     {
 
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $photo = Photo::findOrFail($id);
         $photo->updated_at = now();

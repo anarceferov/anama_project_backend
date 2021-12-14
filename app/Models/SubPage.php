@@ -16,8 +16,13 @@ class SubPage extends Model
     protected $fillable = ['is_active' , 'key' , 'page_id'];
     public $timestamps = false;
 
-    public function page()
+    public function pages()
     {
         return $this->belongsTo(Page::class)->with('locales');
+    }
+
+    public function page()
+    {
+        return $this->belongsTo(Page::class)->with('locale');
     }
 }

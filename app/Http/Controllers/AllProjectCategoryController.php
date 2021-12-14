@@ -4,17 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\AllProjectCategory;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AllProjectCategoryController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $categories = AllProjectCategory::with('locales', 'allProject')->get();
-        return response($categories);
+
+        if (auth()->check()) {
+            $categories = AllProjectCategory::with('locales', 'allProjects');
+        } else {
+            $categories = AllProjectCategory::with('locale', 'allProject');
+        }
+        return $this->dataResponse($categories->simplePaginate($this->getPerPage()));
     }
 
 
@@ -37,7 +45,12 @@ class AllProjectCategoryController extends Controller
 
     public function show($id)
     {
-        $category = AllProjectCategory::with('locales' , 'allProject')->firstOrFail($id);
+
+        if (auth()->check()) {
+            $category = AllProjectCategory::with('locales', 'allProjects')->findOrFail($id);
+        } else {
+            $category = AllProjectCategory::with('locale', 'allProject')->findOrFail($id);
+        }
         return $this->dataResponse($category);
     }
 

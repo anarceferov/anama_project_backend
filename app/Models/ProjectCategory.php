@@ -20,8 +20,13 @@ class ProjectCategory extends Model
         return $this->belongsTo(File::class, 'image_uuid');
     }
 
-    public function project()
+    public function projects()
     {
         return $this->hasMany(Project::class, 'project_category_id')->with('image', 'locales');
+    }
+
+    public function project()
+    {
+        return $this->hasMany(Project::class, 'project_category_id')->with('image', 'locale');
     }
 }

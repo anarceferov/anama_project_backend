@@ -14,8 +14,13 @@ class AboutCategoryController extends Controller
 
     public function index()
     {
-        $about = AboutCategory::query()->with('abouts')->get();
-        return response($about);
+        if (auth()->check()) {
+            $about = AboutCategory::with('abouts')->get();
+        } else {
+            $about = AboutCategory::with('about')->get();
+        }
+
+        return $this->dataResponse($about);
     }
 
     public function store(Request $request)

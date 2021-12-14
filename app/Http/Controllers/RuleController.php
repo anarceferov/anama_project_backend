@@ -4,17 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Rule;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class RuleController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $rule = Rule::with('locales')->get();
-        return response($rule);
+        if (auth()->check()) {
+            $rule = Rule::with('locales');
+        } else {
+            $rule = Rule::with('locale');
+        }
+        return $this->dataResponse($rule->simplePaginate($this->getPerPage()));
     }
 
 
@@ -37,7 +44,7 @@ class RuleController extends Controller
 
     public function show($id)
     {
-        //
+        
     }
 
 

@@ -8,15 +8,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ImsmaLocale;
+use App\Traits\Paginatable;
 
 class ImsmaController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $imsmas = Imsma::query()->with('image', 'locales')->get();
-        return response($imsmas);
+        if (auth()->check()) {
+            $imsmas = Imsma::with('image', 'locales');
+        } else {
+            $imsmas = Imsma::with('image', 'locale');
+        }
+        return $this->dataResponse($imsmas->simplePaginate($this->getPerPage()));
     }
 
     public function store(Request $request)
@@ -75,7 +82,11 @@ class ImsmaController extends Controller
 
     public function show($id)
     {
-        $imsma = Imsma::with('image', 'locales')->where('id', $id)->first();
+        if (auth()->check()) {
+            $imsma = Imsma::with('image', 'locales')->findOrFail($id);
+        } else {
+            $imsma = Imsma::with('image', 'locale')->findOrFail($id);
+        }
         return $this->dataResponse($imsma);
     }
 

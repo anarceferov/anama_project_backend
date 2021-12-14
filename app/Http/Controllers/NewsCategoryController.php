@@ -4,24 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\NewsCategory;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class NewsCategoryController extends Controller
 {
 
-    use ApiResponder;
-    
+    use ApiResponder, Paginatable;
+
+    private $perPage;
+
     public function index()
     {
-        $categories = NewsCategory::with('news')->get();
-        return response($categories);
+        if (auth()->check()) {
+            $categories = NewsCategory::with('news');
+        } else {
+            $categories = NewsCategory::with('oneNews');
+        }
+        return $this->dataResponse($categories->simplePaginate($this->getPerPage()));
     }
 
 
     public function store(Request $request)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $newsCategory_id = null;
         DB::transaction(function () use ($request, &$newsCategory_id) {
@@ -40,14 +47,18 @@ class NewsCategoryController extends Controller
 
     public function show($id)
     {
-        $category = NewsCategory::with('OneNews')->where('id', $id)->first();
+        if (auth()->check()) {
+            $category = NewsCategory::with('news')->findOrFail($id);
+        } else {
+            $category = NewsCategory::with('OneNews')->findOrFail($id);
+        }
         return $this->dataResponse($category);
     }
 
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $newsCategory = NewsCategory::findOrFail($id);

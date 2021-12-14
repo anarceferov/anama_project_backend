@@ -6,6 +6,7 @@ use App\Traits\Localizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\News;
 
 class NewsCategory extends Model
 {
@@ -20,7 +21,7 @@ class NewsCategory extends Model
         return $this->hasMany(News::class , 'news_category_id')->with('locales');
     }
 
-    public function OneNews()
+    public function oneNews()
     {
         return $this->hasMany(News::class , 'news_category_id')->with('locale');
     }

@@ -4,23 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Page;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
 class PageController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $pages = page::whereIsActive(1)->with('locales', 'subPage')->get();
-        return response($pages);
+        if (auth()->check()) {
+            $pages = page::whereIsActive(1)->with('locales', 'subPages');
+        } else {
+            $pages = page::whereIsActive(1)->with('locale', 'subPage');
+        }
+        return $this->dataResponse($pages->simplePaginate($this->getPerPage()));
     }
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $page = page::findOrFail($id);
@@ -42,7 +49,7 @@ class PageController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $page_id = null;
         DB::transaction(function () use ($request, &$page_id) {
@@ -64,7 +71,11 @@ class PageController extends Controller
 
     public function show($id)
     {
-        $page = Page::with('locales')->where('id', $id)->first();
+        if (auth()->check()) {
+            $page = Page::with('locales')->findOrFail($id);
+        } else {
+            $page = Page::with('locale')->findOrFail($id);
+        }
         return $this->dataResponse($page);
     }
 
@@ -98,5 +109,4 @@ class PageController extends Controller
             'locales.*.local.required' => 'Dil seçimi mütləqdir'
         ];
     }
-
 }

@@ -4,18 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Press;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use App\Models\PressLocale;
 
 class PressController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
+    
     public function index()
     {
-        $presses = Press::query()->with('file' , 'locales')->get();
-        return response($presses);
+        if (auth()->check()) {
+            $presses = Press::with('file' , 'locales');
+        } else {
+            $presses = Press::with('file' , 'locale');
+        }
+        return $this->dataResponse($presses->simplePaginate($this->getPerPage()));
     }
 
     public function store(Request $request)
@@ -81,7 +87,11 @@ class PressController extends Controller
 
     public function show($id)
     {
-        $press = Press::with('file', 'locales')->where('id', $id)->first();
+        if (auth()->check()) {
+            $press = Press::with('file', 'locales')->findOrFail($id);
+        } else {
+            $press = Press::with('file', 'locale')->findOrFail($id);
+        }
         return $this->dataResponse($press);
     }
 

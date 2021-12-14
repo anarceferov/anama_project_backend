@@ -6,17 +6,22 @@ use App\Models\Process;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use App\Models\ProcessLocale;
+use App\Traits\Paginatable;
 
 class ProcessesController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $processes = Process::query()->with('image', 'locales')->get();
-        return response($processes);
+        if (auth()->check()) {
+            $processes = Process::query()->with('image', 'locales');
+        } else {
+            $processes = Process::query()->with('image', 'locale');
+        }
+        return $this->dataResponse($processes->simplePaginate($this->getPerPage()));
     }
 
     public function store(Request $request)
@@ -77,7 +82,12 @@ class ProcessesController extends Controller
 
     public function show($id)
     {
-        $process = Process::with('image', 'locales')->where('id', $id)->first();
+
+        if (auth()->check()) {
+            $process = Process::with('image', 'locales')->findOrFail($id);
+        } else {
+            $process = Process::with('image', 'locale')->findOrFail($id);
+        }
         return $this->dataResponse($process);
     }
 

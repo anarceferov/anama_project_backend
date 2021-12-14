@@ -4,17 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $projects = Project::with('image', 'locales')->get();
-        return response($projects);
+        if (auth()->check()) {
+            $projects = Project::with('image', 'locales');
+        } else {
+            $projects = Project::with('image', 'locale');
+        }
+        return $this->dataResponse($projects->simplePaginate($this->getPerPage()));
     }
 
 
@@ -39,7 +46,11 @@ class ProjectController extends Controller
 
     public function show($id)
     {
-        $project = Project::with('image', 'locales')->where('id', $id)->first();
+        if (auth()->check()) {
+            $project = Project::with('image', 'locales')->findOrFail($id);
+        } else {
+            $project = Project::with('image', 'locale')->findOrFail($id);
+        }
         return $this->dataResponse($project);
     }
 

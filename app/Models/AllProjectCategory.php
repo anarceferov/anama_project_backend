@@ -16,8 +16,13 @@ class AllProjectCategory extends Model
     protected $keyType = 'integer';
 
 
-    public function allProject()
+    public function allProjects()
     {
         return $this->hasMany(AllProject::class, 'all_project_category_id')->with('image', 'locales');
+    }
+
+    public function allProject()
+    {
+        return $this->hasMany(AllProject::class, 'all_project_category_id')->with('image', 'locale');
     }
 }

@@ -4,16 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\WorkAbout;
 use App\Traits\ApiResponder;
+use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class WorkAboutController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
+
     public function index()
     {
-        $workAbouts = WorkAbout::query()->with('image', 'locales')->get();
-        return response($workAbouts);
+        if (auth()->check()) {
+            $workAbouts = WorkAbout::with('image', 'locales');
+        } else {
+            $workAbouts = WorkAbout::with('image', 'locale');
+        }
+        return $this->dataResponse($workAbouts->simplePaginate($this->getPerPage()));
     }
 
 
@@ -40,7 +48,11 @@ class WorkAboutController extends Controller
 
     public function show($id)
     {
-        $workAbout = WorkAbout::with('image', 'locales')->where('id', $id)->first();
+        if (auth()->check()) {
+            $workAbout = WorkAbout::with('image', 'locales')->findOrFail($id);
+        } else {
+            $workAbout = WorkAbout::with('image', 'locale')->findOrFail($id);
+        }
         return $this->dataResponse($workAbout);
     }
 

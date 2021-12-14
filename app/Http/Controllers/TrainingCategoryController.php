@@ -13,8 +13,12 @@ class TrainingCategoryController extends Controller
 
     public function index()
     {
-        $categories = TrainingCategory::with('locales')->get();
-        return response($categories);
+        if (auth()->check()) {
+            $categories = TrainingCategory::with('locales')->get();
+        } else {
+            $categories = TrainingCategory::with('locale')->get();
+        }
+        return $this->dataResponse($categories);
     }
 
 
@@ -37,7 +41,12 @@ class TrainingCategoryController extends Controller
 
     public function show($id)
     {
-        $category = TrainingCategory::with('locales')->where('id', $id)->first();
+
+        if (auth()->check()) {
+            $category = TrainingCategory::with('locales')->findOrFail($id);
+        } else {
+            $category = TrainingCategory::with('locale')->findOrFail($id);
+        }
         return $this->dataResponse($category);
     }
 

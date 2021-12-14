@@ -6,16 +6,22 @@ use App\Models\Chronology;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\ChronologyLocale;
+use App\Traits\Paginatable;
 
 class ChronologyController extends Controller
 {
-    use ApiResponder;
+    use ApiResponder, Paginatable;
+
+    private $perPage;
 
     public function index()
     {
-        $chronologies = Chronology::query()->with('image', 'locales')->orderBy('date', 'asc')->get();
-        return response($chronologies);
+        if (auth()->check()) {
+            $chronologies = Chronology::with('image', 'locales')->orderBy('date', 'asc');
+        } else {
+            $chronologies = Chronology::with('image', 'locale')->orderBy('date', 'asc');
+        }
+        return $this->dataResponse($chronologies->simplePaginate($this->getPerPage()));
     }
 
     public function store(Request $request)
@@ -76,8 +82,12 @@ class ChronologyController extends Controller
 
 
     public function show($id)
-    {
-        $chronology = Chronology::with('image', 'locales')->where('id', $id)->first();
+    { 
+        if (auth()->check()) {
+            $chronology = Chronology::with('image', 'locales')->findOrFail($id);
+        } else {
+            $chronology = Chronology::with('image', 'locale')->findOrFail($id);
+        }
         return $this->dataResponse($chronology);
     }
 
