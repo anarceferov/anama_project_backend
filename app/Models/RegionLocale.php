@@ -10,5 +10,6 @@ class RegionLocale extends Model
 {
     use HasFactory , UsesUuid;
     protected $keyType = 'string';
+    protected $timestamp = false;
     protected $fillable = ['name', 'local'];
 }

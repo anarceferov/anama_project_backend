@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Region;
 use Illuminate\Database\Seeder;
 use App\Models\RegionLocale;
+use Illuminate\Support\Str;
 
 class RegionSeeder extends Seeder
 {
@@ -27,48 +28,61 @@ class RegionSeeder extends Seeder
             "nakhchivan" => "Naxçıvan", "mingechevir" => "Mingəçevir"
         ];
 
-        $enLanguages = ["baku"=> "Baku", "qakh"=> "Qakh", "aghsu"=> "Agsu", "babak"=> "Babek", "barda"=> "Barda", "khizi"=> "Khizi", "khuba"=> "Quba", "kusar"=> "Qusar", 
-        "lerik"=> "Lerik", "oghuz"=> "Oghuz", "sheki"=> "Shaki", "tovuz"=> "Tovuz", "udjar"=> "Ujar", "agdash"=> "Ağdash", "aghdam"=> "Agdam", "astara"=> "Astara", 
-        "djulfa"=> "Julfa", "fuzuli"=> "Fuzuli", "gandja"=> "Ganja", "goygol"=> "Goygol", "lachin"=> "Lachin", "qazakh"=> "Qazakh", "saatli"=> "Saatly", "salyan"=> "Salyan", 
-        "samukh"=> "Samukh", "sharur"=> "Sharur", "shusha"=> "Shusha", "tartar"=> "Tartar", "zardab"=> "Zardab", "balaken"=> "Balakan", "gedebey"=> "Gadabay", 
-        "goychay"=> "Goychay", "imishli"=> "Imishli", "khabala"=> "Qabala", "khojali"=> "Khojaly", "masalli"=> "Masally", "ordubad"=> "Ordubad", "qubadli"=> "Qubadli", 
-        "sadarak"=> "Sadarak", "shabran"=> "Shabran", "shahbuz"=> "Shahbuz", "shamkir"=> "Shamkir", "shirvan"=> "Shirvan", "siyezen"=> "Siyazan", "xachmaz"=> "Khachmaz", 
-        "yevlakh"=> "Yevlakh", "absheron"=> "Absheron", "aghstafa"=> "Agstafa", "beyleqan"=> "Beylagan", "goranboy"=> "Goranboy", "jabrayil"=> "Jabrayil", 
-        "kangarli"=> "Kangarli", "kurdamir"=> "Kurdamir", "lenkeran"=> "Lankaran", "naftalan"=> "Naftalan", "qobustan"=> "Gobustan", "shamakhi"=> "Shamakhi", 
-        "yardimli"=> "Yardimli", "zengilan"=> "Zangilan", "agchabedi"=> "Aghjabadi", "bilesuvar"=> "Bilasuvar", "dashkesen"=> "Dashkasan", "hacikabul"=> "Hajigabul", 
-        "ismayilli"=> "Ismayilli", "kalbadjar"=> "Kalbajar", "khankandi"=> "Khankendi", "neftchala"=> "Neftchala", "sabirabad"=> "Sabirabad", "sumkhayit"=> "Sumqayit", 
-        "xochavend"=> "Khojavend", "zakhatala"=> "Zaqatala", "djalilabad"=> "Jalilabad", "nakhchivan"=> "Nakhchivan", "mingechevir"=> "Mingachevir"];
+        $enLanguages = [
+            "baku" => "Baku", "qakh" => "Qakh", "aghsu" => "Agsu", "babak" => "Babek", "barda" => "Barda", "khizi" => "Khizi", "khuba" => "Quba", "kusar" => "Qusar",
+            "lerik" => "Lerik", "oghuz" => "Oghuz", "sheki" => "Shaki", "tovuz" => "Tovuz", "udjar" => "Ujar", "agdash" => "Ağdash", "aghdam" => "Agdam", "astara" => "Astara",
+            "djulfa" => "Julfa", "fuzuli" => "Fuzuli", "gandja" => "Ganja", "goygol" => "Goygol", "lachin" => "Lachin", "qazakh" => "Qazakh", "saatli" => "Saatly", "salyan" => "Salyan",
+            "samukh" => "Samukh", "sharur" => "Sharur", "shusha" => "Shusha", "tartar" => "Tartar", "zardab" => "Zardab", "balaken" => "Balakan", "gedebey" => "Gadabay",
+            "goychay" => "Goychay", "imishli" => "Imishli", "khabala" => "Qabala", "khojali" => "Khojaly", "masalli" => "Masally", "ordubad" => "Ordubad", "qubadli" => "Qubadli",
+            "sadarak" => "Sadarak", "shabran" => "Shabran", "shahbuz" => "Shahbuz", "shamkir" => "Shamkir", "shirvan" => "Shirvan", "siyezen" => "Siyazan", "xachmaz" => "Khachmaz",
+            "yevlakh" => "Yevlakh", "absheron" => "Absheron", "aghstafa" => "Agstafa", "beyleqan" => "Beylagan", "goranboy" => "Goranboy", "jabrayil" => "Jabrayil",
+            "kangarli" => "Kangarli", "kurdamir" => "Kurdamir", "lenkeran" => "Lankaran", "naftalan" => "Naftalan", "qobustan" => "Gobustan", "shamakhi" => "Shamakhi",
+            "yardimli" => "Yardimli", "zengilan" => "Zangilan", "agchabedi" => "Aghjabadi", "bilesuvar" => "Bilasuvar", "dashkesen" => "Dashkasan", "hacikabul" => "Hajigabul",
+            "ismayilli" => "Ismayilli", "kalbadjar" => "Kalbajar", "khankandi" => "Khankendi", "neftchala" => "Neftchala", "sabirabad" => "Sabirabad", "sumkhayit" => "Sumqayit",
+            "xochavend" => "Khojavend", "zakhatala" => "Zaqatala", "djalilabad" => "Jalilabad", "nakhchivan" => "Nakhchivan", "mingechevir" => "Mingachevir"
+        ];
 
-        $languages = array_merge($azLanguages,$enLanguages);
-
-        foreach($languages as $key=>$lan){
-            $region = new Region;
-            $region->save();
-
-
-            $region->locales()->create([
-                'local' => 'az',
-                'region_id' => $region->id,
-                'name' => $lan,
-            ]);
-
-
-            $region->locales()->create([
-                'local' => 'en',
-                'region_id' => $region->id,
-                'name' => $lan,
-            ]);
-
+        $azL = [];
+        foreach ($azLanguages as $key => $az) {
+            array_push($azL, $az);
         }
 
 
+        $enL = [];
+        foreach ($enLanguages as $key => $en) {
+            array_push($enL, $en);
+        }
+
+
+        // $languages = array_merge($azL, $enL);
+
+
+        for ($i = 0; $i < 74; $i++) {
+            $region = new Region;
+            $region->save();
+        }
+
+
+        $b = 0;
+        foreach ($azL as $key => $az) {
+            $b++;
+            RegionLocale::insert([
+                'id' => Str::uuid(),
+                'local' => 'az',
+                'region_id' => $b,
+                'name' => $az,
+            ]);
+        }
+
+        $a = 0;
+        foreach ($enL as $key => $en) {
+            $a++;
+            RegionLocale::insert([
+                'id' => Str::uuid(),
+                'local' => 'en',
+                'region_id' => $a,
+                'name' => $en,
+            ]);
+        }
     }
-
-
-
-
-
-    // $user = User=>=>create($user_inputs);
-
-    // $xyz = $user->xyz()->create($xyz_inputs);
 }

@@ -18,7 +18,6 @@ class CreateRegionLocalesTable extends Migration
             $table->string('local', 3);
             $table->foreignId("region_id")->constrained("regions")->onDelete('cascade');
             $table->string('name');
-            $table->timestamps();
         });
     }
 
