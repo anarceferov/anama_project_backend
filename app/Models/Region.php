@@ -18,4 +18,14 @@ class Region extends Model
     {
         return $this->hasMany(RegionLocale::class , 'region_id');
     }
+
+    public function locale()
+    {
+        return $this->hasOne(RegionLocale::class , 'region_id');
+    }
+
+    public function data()
+    {
+        return $this->hasOne(RegionData::class , 'region_id');
+    }
 }

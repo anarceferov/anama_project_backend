@@ -14,4 +14,13 @@ class RegionData extends Model
     protected $keyType = 'integer';
     protected $fillable = ['year', 'month' , 'week' , 'tank' , 'clean_area' , 'unexplosive' , 'pedestrian' , 'region_id'];
 
+    public function regions()
+    {
+        return $this->belongsTo(Region::class , 'region_id')->with('locales');
+    }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class , 'region_id')->with('locale');
+    }
 }

@@ -71,6 +71,7 @@ Route::middleware('locale')->group(function () {
     Route::apiResource('project/categories', ProjectCategoryController::class)->only(['index', 'show']);
     Route::apiResource('regions', RegionController::class)->only(['index', 'show']);
     Route::apiResource('data/regions', RegionDataController::class)->only(['index', 'show']);
+    
 });
 
 
