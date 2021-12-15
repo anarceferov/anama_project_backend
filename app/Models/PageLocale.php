@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PageLocale extends Model
 {
-    use HasFactory , UsesUuid;
+    use HasFactory, UsesUuid;
     protected $keyType = 'string';
     protected $fillable = ['name', 'local'];
 }

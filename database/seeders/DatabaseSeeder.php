@@ -8,6 +8,7 @@ use Database\Seeders\UserSeeder;
 use Database\Seeders\ChronologySeeder;
 use Database\Seeders\RegionSeeder;
 
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -27,7 +28,7 @@ class DatabaseSeeder extends Seeder
             // AboutSeeder::class,
             // ChronologySeeder::class,
             // ImsmaSeeder::class,
-            // PageSeeder::class,
+            PageSeeder::class,
             // PressSeeder::class,
             // ProcessesIconSeeder::class,
             // QualitySeeder::class,
