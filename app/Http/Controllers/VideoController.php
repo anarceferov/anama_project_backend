@@ -26,6 +26,17 @@ class VideoController extends Controller
     }
 
 
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $video = Video::with('locales')->findOrFail($id);
+        } else {
+            $video = Video::with('locale')->findOrFail($id);
+        }
+        return $this->dataResponse($video);
+    }
+
+
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -42,17 +53,6 @@ class VideoController extends Controller
         });
 
         return $this->dataResponse(['video_id' => $video_id], 201);
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $video = Video::with('locales')->findOrFail($id);
-        } else {
-            $video = Video::with('locale')->findOrFail($id);
-        }
-        return $this->dataResponse($video);
     }
 
 

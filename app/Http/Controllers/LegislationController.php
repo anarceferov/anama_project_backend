@@ -24,6 +24,18 @@ class LegislationController extends Controller
         return $this->dataResponse($legislations->simplePaginate($this->getPerPage()));
     }
 
+
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $legislation = Legislation::with('locales')->findOrFail($id);
+        } else {
+            $legislation = Legislation::with('locale')->findOrFail($id);
+        }
+        return $this->dataResponse($legislation);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules());
@@ -40,15 +52,6 @@ class LegislationController extends Controller
         return $this->dataResponse(['legislation_id' => $legislation_id], 201);
     }
 
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $legislation = Legislation::with('locales')->findOrFail($id);
-        } else {
-            $legislation = Legislation::with('locale')->findOrFail($id);
-        }
-        return $this->dataResponse($legislation);
-    }
 
     public function update(Request $request, $id)
     {

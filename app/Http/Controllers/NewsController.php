@@ -18,14 +18,25 @@ class NewsController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $news = NewsCategory::with('news');
+            $news = NewsCategory::with('locales' , 'news');
         } else {
-            $news = NewsCategory::with('oneNews');
+            $news = NewsCategory::with('locale' , 'oneNews');
         }
         return $this->dataResponse($news->simplePaginate($this->getPerPage()));
     }
 
 
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $news = News::with('image', 'locales', 'category')->findOrFail($id);
+        } else {
+            $news = News::with('image', 'locale', 'category')->findOrFail($id);
+        }
+        return $this->dataResponse($news);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -46,17 +57,6 @@ class NewsController extends Controller
         });
 
         return $this->dataResponse(['news_id' => $news_id], 201);
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $news = News::with('image', 'locales', 'category')->findOrFail($id);
-        } else {
-            $news = News::with('image', 'locale', 'category')->findOrFail($id);
-        }
-        return $this->dataResponse($news);
     }
 
 

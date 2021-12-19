@@ -26,6 +26,17 @@ class AllProjectController extends Controller
     }
 
 
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $project = AllProject::with('image', 'locales')->findOrFail($id);
+        } else {
+            $project = AllProject::with('image', 'locale')->findOrFail($id);
+        }
+        return $this->dataResponse($project);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -42,17 +53,6 @@ class AllProjectController extends Controller
         });
 
         return $this->dataResponse(['project_id' => $project_id], 201);
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $project = AllProject::with('image', 'locales')->findOrFail($id);
-        } else {
-            $project = AllProject::with('image', 'locale')->findOrFail($id);
-        }
-        return $this->dataResponse($project);
     }
 
 

@@ -24,6 +24,18 @@ class PressController extends Controller
         return $this->dataResponse($presses->simplePaginate($this->getPerPage()));
     }
 
+
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $press = Press::with('file', 'locales')->findOrFail($id);
+        } else {
+            $press = Press::with('file', 'locale')->findOrFail($id);
+        }
+        return $this->dataResponse($press);
+    }
+
+    
     public function store(Request $request)
     {
 
@@ -83,16 +95,6 @@ class PressController extends Controller
         });
 
         return $this->successResponse(trans("responses.ok"));
-    }
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $press = Press::with('file', 'locales')->findOrFail($id);
-        } else {
-            $press = Press::with('file', 'locale')->findOrFail($id);
-        }
-        return $this->dataResponse($press);
     }
 
 

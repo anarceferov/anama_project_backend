@@ -26,6 +26,18 @@ class ImsmaController extends Controller
         return $this->dataResponse($imsmas->simplePaginate($this->getPerPage()));
     }
 
+
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $imsma = Imsma::with('image', 'locales')->findOrFail($id);
+        } else {
+            $imsma = Imsma::with('image', 'locale')->findOrFail($id);
+        }
+        return $this->dataResponse($imsma);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -77,17 +89,6 @@ class ImsmaController extends Controller
         });
 
         return $this->successResponse(trans("responses.ok"));
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $imsma = Imsma::with('image', 'locales')->findOrFail($id);
-        } else {
-            $imsma = Imsma::with('image', 'locale')->findOrFail($id);
-        }
-        return $this->dataResponse($imsma);
     }
 
 

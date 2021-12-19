@@ -24,6 +24,18 @@ class ChronologyController extends Controller
         return $this->dataResponse($chronologies->simplePaginate($this->getPerPage()));
     }
 
+
+    public function show($id)
+    { 
+        if (auth()->check()) {
+            $chronology = Chronology::with('image', 'locales')->findOrFail($id);
+        } else {
+            $chronology = Chronology::with('image', 'locale')->findOrFail($id);
+        }
+        return $this->dataResponse($chronology);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -78,17 +90,6 @@ class ChronologyController extends Controller
         });
 
         return $this->successResponse(trans("responses.ok"));
-    }
-
-
-    public function show($id)
-    { 
-        if (auth()->check()) {
-            $chronology = Chronology::with('image', 'locales')->findOrFail($id);
-        } else {
-            $chronology = Chronology::with('image', 'locale')->findOrFail($id);
-        }
-        return $this->dataResponse($chronology);
     }
 
 

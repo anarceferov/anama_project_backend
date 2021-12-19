@@ -18,11 +18,11 @@ class SubPage extends Model
 
     public function pages()
     {
-        return $this->belongsTo(Page::class)->with('locales');
+        return $this->belongsTo(Page::class , 'page_id')->with('locales');
     }
 
     public function page()
     {
-        return $this->belongsTo(Page::class)->with('locale');
+        return $this->belongsTo(Page::class , 'page_id')->where('is_active' , 1)->with('locale');
     }
 }

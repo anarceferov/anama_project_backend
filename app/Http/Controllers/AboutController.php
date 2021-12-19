@@ -16,11 +16,22 @@ class AboutController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $about = AboutCategory::with('abouts');
+            $about = AboutCategory::with('locales' , 'abouts');
         } else {
-            $about = AboutCategory::with('about');
+            $about = AboutCategory::with('locale' , 'about');
         }
         return $this->dataResponse($about->simplePaginate($this->getPerPage()));
+    }
+
+    
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $about = About::with('image', 'category', 'locales')->findOrFail($id);
+        } else {
+            $about = About::with('image', 'category', 'locale')->findOrFail($id);
+        }
+        return $this->dataResponse($about);
     }
 
 
@@ -79,16 +90,6 @@ class AboutController extends Controller
         return $this->successResponse(trans("responses.ok"));
     }
 
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $about = About::with('image', 'category', 'locales')->findOrFail($id);
-        } else {
-            $about = About::with('image', 'category', 'locale')->findOrFail($id);
-        }
-        return $this->dataResponse($about);
-    }
 
     private function getValidationRules(): array
     {

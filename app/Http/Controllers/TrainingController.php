@@ -24,6 +24,18 @@ class TrainingController extends Controller
     }
 
 
+    public function show($id)
+    {
+
+        if (auth()->check()) {
+            $training = Training::findOrFail($id);
+        } else {
+            $training = Training::findOrFail($id);
+        }
+        return $this->dataResponse($training);
+    }
+
+    
     public function store(Request $request)
     {
 
@@ -39,18 +51,6 @@ class TrainingController extends Controller
         $training->save();
 
         return $this->successResponse(trans('ok'));
-    }
-
-
-    public function show($id)
-    {
-
-        if (auth()->check()) {
-            $training = Training::findOrFail($id);
-        } else {
-            $training = Training::findOrFail($id);
-        }
-        return $this->dataResponse($training);
     }
 
 

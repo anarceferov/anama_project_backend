@@ -24,6 +24,17 @@ class ProjectCategoryController extends Controller
     }
 
 
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $category = ProjectCategory::with('image', 'locales', 'projects')->findOrFail($id);
+        } else {
+            $category = ProjectCategory::with('image', 'locale', 'project')->findOrFail($id);
+        }
+        return $this->dataResponse($category);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -39,17 +50,6 @@ class ProjectCategoryController extends Controller
         });
 
         return $this->dataResponse(['projectCategory_id' => $projectCategory_id], 201);
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $category = ProjectCategory::with('image', 'locales', 'projects')->findOrFail($id);
-        } else {
-            $category = ProjectCategory::with('image', 'locale', 'project')->findOrFail($id);
-        }
-        return $this->dataResponse($category);
     }
 
 

@@ -26,6 +26,18 @@ class AllProjectCategoryController extends Controller
     }
 
 
+    public function show($id)
+    {
+
+        if (auth()->check()) {
+            $category = AllProjectCategory::with('locales', 'allProjects')->findOrFail($id);
+        } else {
+            $category = AllProjectCategory::with('locale', 'allProject')->findOrFail($id);
+        }
+        return $this->dataResponse($category);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -40,18 +52,6 @@ class AllProjectCategoryController extends Controller
         });
 
         return $this->dataResponse(['projectCategory_id' => $projectCategory_id], 201);
-    }
-
-
-    public function show($id)
-    {
-
-        if (auth()->check()) {
-            $category = AllProjectCategory::with('locales', 'allProjects')->findOrFail($id);
-        } else {
-            $category = AllProjectCategory::with('locale', 'allProject')->findOrFail($id);
-        }
-        return $this->dataResponse($category);
     }
 
 

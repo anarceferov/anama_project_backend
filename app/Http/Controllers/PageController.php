@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
-use App\Models\RegionLocale;
 use App\Traits\ApiResponder;
 use App\Traits\Paginatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 
 class PageController extends Controller
 {
@@ -18,13 +16,25 @@ class PageController extends Controller
 
     public function index()
     {
-        if (auth()->check()) {
-            $pages = page::whereIsActive(1)->with('locales', 'subPages');
+        if (!auth()->check()) {
+            $pages = page::where('is_active' , 1)->with('locale' , 'subPage');
         } else {
-            $pages = page::whereIsActive(1)->with('locale', 'subPage');
+            $pages = page::with('locales' , 'subPages');
         }
         return $this->dataResponse($pages->simplePaginate($this->getPerPage()));
     }
+
+
+    public function show($id)
+    {
+        if (!auth()->check()) {
+            $page = Page::where('is_active' , 1)->with('locale' , 'subPage')->findOrFail($id);
+        } else {
+            $page = Page::with('locales' , 'subPages')->findOrFail($id);
+        }
+        return $this->dataResponse($page);
+    }
+
 
     public function update(Request $request, $id)
     {
@@ -49,7 +59,6 @@ class PageController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $page_id = null;
@@ -70,15 +79,6 @@ class PageController extends Controller
         return $this->dataResponse(['page_id' => $page_id], 201);
     }
 
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $page = Page::with('locales')->findOrFail($id);
-        } else {
-            $page = Page::with('locale')->findOrFail($id);
-        }
-        return $this->dataResponse($page);
-    }
 
     public function destroy($id)
     {
@@ -95,6 +95,7 @@ class PageController extends Controller
     private function getValidationRules(): array
     {
         return [
+            'key' => 'unique:pages',
             'is_active' => 'required|boolean',
             'locales.*.local' => 'required',
             'locales.*.name' => 'required',

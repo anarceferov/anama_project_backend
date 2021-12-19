@@ -19,7 +19,7 @@ class Page extends Model
 
     public function subPages()
     {
-        return $this->hasMany(SubPage::class , 'page_id')->where('is_active', 1)->with('locales');
+        return $this->hasMany(SubPage::class , 'page_id')->with('locales');
     }
 
     public function subPage()

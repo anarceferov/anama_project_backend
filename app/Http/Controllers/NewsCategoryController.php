@@ -18,11 +18,22 @@ class NewsCategoryController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $categories = NewsCategory::with('news');
+            $categories = NewsCategory::with('locales' , 'news');
         } else {
-            $categories = NewsCategory::with('oneNews');
+            $categories = NewsCategory::with('locale' , 'oneNews');
         }
         return $this->dataResponse($categories->simplePaginate($this->getPerPage()));
+    }
+
+
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $category = NewsCategory::with('locales' , 'news')->findOrFail($id);
+        } else {
+            $category = NewsCategory::with('locale' , 'OneNews')->findOrFail($id);
+        }
+        return $this->dataResponse($category);
     }
 
 
@@ -42,17 +53,6 @@ class NewsCategoryController extends Controller
         });
 
         return $this->dataResponse(['newsCategory_id' => $newsCategory_id], 201);
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $category = NewsCategory::with('news')->findOrFail($id);
-        } else {
-            $category = NewsCategory::with('OneNews')->findOrFail($id);
-        }
-        return $this->dataResponse($category);
     }
 
 

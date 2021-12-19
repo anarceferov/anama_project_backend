@@ -24,6 +24,19 @@ class ProcessesController extends Controller
         return $this->dataResponse($processes->simplePaginate($this->getPerPage()));
     }
 
+
+    public function show($id)
+    {
+
+        if (auth()->check()) {
+            $process = Process::with('image', 'locales')->findOrFail($id);
+        } else {
+            $process = Process::with('image', 'locale')->findOrFail($id);
+        }
+        return $this->dataResponse($process);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -77,18 +90,6 @@ class ProcessesController extends Controller
         });
 
         return $this->successResponse(trans("responses.ok"));
-    }
-
-
-    public function show($id)
-    {
-
-        if (auth()->check()) {
-            $process = Process::with('image', 'locales')->findOrFail($id);
-        } else {
-            $process = Process::with('image', 'locale')->findOrFail($id);
-        }
-        return $this->dataResponse($process);
     }
 
 

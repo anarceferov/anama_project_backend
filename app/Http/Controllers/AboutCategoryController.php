@@ -15,13 +15,19 @@ class AboutCategoryController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $about = AboutCategory::with('abouts')->get();
+            $about = AboutCategory::with('locales' , 'abouts')->get();
         } else {
-            $about = AboutCategory::with('about')->get();
+            $about = AboutCategory::with('locale' , 'about')->get();
         }
 
         return $this->dataResponse($about);
     }
+
+
+    public function show($id)
+    {
+    }
+
 
     public function store(Request $request)
     {
@@ -59,11 +65,6 @@ class AboutCategoryController extends Controller
         });
 
         return $this->successResponse(trans("responses.ok"));
-    }
-
-
-    public function show($id)
-    {
     }
 
 

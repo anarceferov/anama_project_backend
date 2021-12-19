@@ -16,12 +16,23 @@ class SubPagesController extends Controller
 
     public function index()
     {
-        if (auth()->check()) {
-            $subPages = SubPage::whereIsActive(1)->with('locales', 'pages');
+        if (!auth()->check()) {
+            $subPages = SubPage::where('is_active' , 1)->with('locale', 'page');
         } else {
-            $subPages = SubPage::whereIsActive(1)->with('locale', 'page');
+            $subPages = SubPage::with('locales', 'pages');
         }
         return $this->dataResponse($subPages->simplePaginate($this->getPerPage()));
+    }
+
+
+    public function show($id)
+    {
+        if (!auth()->check()) {
+            $subPages = SubPage::where('is_active', 1)->with('locale', 'page')->findOrFail($id);
+        } else {
+            $subPages = SubPage::with('locales', 'pages')->findOrFail($id);
+        }
+        return $this->dataResponse($subPages);
     }
 
 
@@ -46,17 +57,6 @@ class SubPagesController extends Controller
         });
 
         return $this->dataResponse(['subPage_id' => $subPage_id], 201);
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $subPages = SubPage::where('is_active', 1)->with('locales', 'pages')->findOrFail($id);
-        } else {
-            $subPages = SubPage::where('is_active', 1)->with('locale', 'page')->findOrFail($id);
-        }
-        return $this->dataResponse($subPages);
     }
 
 
@@ -96,6 +96,7 @@ class SubPagesController extends Controller
     private function getValidationRules(): array
     {
         return [
+            'key' => 'unique:sub_pages',
             'page_id' => 'required|numeric',
             'is_active' => 'required|boolean',
             'locales.*.local' => 'required',
@@ -109,7 +110,7 @@ class SubPagesController extends Controller
             'is_active.required' => 'Status',
             'is_active.boolean' => 'Status 1 və ya 0 ola bilər',
             'locales.*.name.required' => 'Sehifə adı mütləqdir',
-            'locales.*.local.required' => 'Dil seçimi mütləqdir'
+            'locales.*.local.required' => 'Dil seçimi mütləqdir',
         ];
     }
 }

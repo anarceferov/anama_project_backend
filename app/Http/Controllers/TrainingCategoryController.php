@@ -22,6 +22,18 @@ class TrainingCategoryController extends Controller
     }
 
 
+    public function show($id)
+    {
+
+        if (auth()->check()) {
+            $category = TrainingCategory::with('locales')->findOrFail($id);
+        } else {
+            $category = TrainingCategory::with('locale')->findOrFail($id);
+        }
+        return $this->dataResponse($category);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules() , $this->customAttributes());
@@ -36,18 +48,6 @@ class TrainingCategoryController extends Controller
         });
 
         return $this->dataResponse(['trainingCategory_id' => $trainingCategory_id], 201);
-    }
-
-
-    public function show($id)
-    {
-
-        if (auth()->check()) {
-            $category = TrainingCategory::with('locales')->findOrFail($id);
-        } else {
-            $category = TrainingCategory::with('locale')->findOrFail($id);
-        }
-        return $this->dataResponse($category);
     }
 
 

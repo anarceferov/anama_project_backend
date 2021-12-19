@@ -24,6 +24,18 @@ class NationalStandartCategoryController extends Controller
         return $this->dataResponse($categories->simplePaginate($this->getPerPage()));
     }
 
+
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $category = NationalStandartCategory::with('nationalStandarts', 'locales')->findOrFail($id);
+        } else {
+            $category = NationalStandartCategory::with('nationalStandart', 'locale')->findOrFail($id);
+        }
+        return $this->dataResponse($category);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -40,15 +52,6 @@ class NationalStandartCategoryController extends Controller
         return $this->dataResponse(['NationalStandartCategory_id' => $NationalStandartCategory_id], 201);
     }
 
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $category = NationalStandartCategory::with('nationalStandarts', 'locales')->findOrFail($id);
-        } else {
-            $category = NationalStandartCategory::with('nationalStandart', 'locale')->findOrFail($id);
-        }
-        return $this->dataResponse($category);
-    }
 
     public function update(Request $request, $id)
     {

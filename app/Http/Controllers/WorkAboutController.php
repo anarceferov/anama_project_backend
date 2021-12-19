@@ -25,6 +25,17 @@ class WorkAboutController extends Controller
     }
 
 
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $workAbout = WorkAbout::with('image', 'locales')->findOrFail($id);
+        } else {
+            $workAbout = WorkAbout::with('image', 'locale')->findOrFail($id);
+        }
+        return $this->dataResponse($workAbout);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -43,17 +54,6 @@ class WorkAboutController extends Controller
         });
 
         return $this->dataResponse(['workAbout_id' => $workAbout_id], 201);
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $workAbout = WorkAbout::with('image', 'locales')->findOrFail($id);
-        } else {
-            $workAbout = WorkAbout::with('image', 'locale')->findOrFail($id);
-        }
-        return $this->dataResponse($workAbout);
     }
 
 

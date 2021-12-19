@@ -26,6 +26,17 @@ class RegionController extends Controller
     }
 
 
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $region = Region::with('locales', 'data')->findOrFail($id);
+        } else {
+            $region = Region::with('locale', 'data')->findOrFail($id);
+        }
+        return $this->dataResponse($region);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -38,17 +49,6 @@ class RegionController extends Controller
         });
 
         return $this->successResponse(trans('responses.ok'));
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $region = Region::with('locales', 'data')->findOrFail($id);
-        } else {
-            $region = Region::with('locale', 'data')->findOrFail($id);
-        }
-        return $this->dataResponse($region);
     }
 
 

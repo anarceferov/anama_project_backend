@@ -21,6 +21,18 @@ class ProcessIconController extends Controller
         return $this->dataResponse($ProcessIcons);
     }
 
+
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $processIcon = ProcessIcon::with('icon', 'image', 'locales')->findOrFail($id);
+        } else {
+            $processIcon = ProcessIcon::with('icon', 'image', 'locale')->findOrFail($id);
+        }
+        return $this->dataResponse($processIcon);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -79,16 +91,6 @@ class ProcessIconController extends Controller
         });
 
         return $this->successResponse(trans("responses.ok"));
-    }
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $processIcon = ProcessIcon::with('icon', 'image', 'locales')->findOrFail($id);
-        } else {
-            $processIcon = ProcessIcon::with('icon', 'image', 'locale')->findOrFail($id);
-        }
-        return $this->dataResponse($processIcon);
     }
 
 

@@ -35,7 +35,7 @@ class PagesSeeder extends Seeder
         // Page creat
         for ($i = 0; $i < count($pagesAz); $i++) {
             $page = new Page();
-            $page->key = 'boom';
+            $page->key = $i;
             $page->is_active = 1;
             $page->save();
         }
@@ -64,49 +64,52 @@ class PagesSeeder extends Seeder
 
         // SubPages create  Agentlik
         for ($i = 0; $i < 4; $i++) {
-            $a++;
             $sub = new SubPage;
-            $sub->key = 'key';
+            $sub->key = $i;
             $sub->is_active = 1;
             $sub->page_id = 1;
             $sub->save();
         }
 
         // SubPages create  Fəaliyyət
-
+        $sub1 = 4;
         for ($i = 0; $i < 4; $i++) {
+            $sub1++;
             $sub = new SubPage;
-            $sub->key = 'key';
+            $sub->key = $sub1;
             $sub->is_active = 1;
             $sub->page_id = 2;
             $sub->save();
         }
 
         // SubPages create  Qanunvericilik
-
+        $sub2 = 8;
         for ($i = 0; $i < 3; $i++) {
+            $sub2++;
             $sub = new SubPage;
-            $sub->key = 'key';
+            $sub->key = $sub2;
             $sub->is_active = 1;
             $sub->page_id = 3;
             $sub->save();
         }
 
         // SubPages create  Layihələr
-
+        $sub3 = 11;
         for ($i = 0; $i < 2; $i++) {
+            $sub3++;
             $sub = new SubPage;
-            $sub->key = 'key';
+            $sub->key = $sub3;
             $sub->is_active = 1;
             $sub->page_id = 4;
             $sub->save();
         }
 
         // SubPages create  Multimedia
-
+        $sub4 = 13;
         for ($i = 0; $i < 3; $i++) {
+            $sub4++;
             $sub = new SubPage;
-            $sub->key = 'key';
+            $sub->key = $sub4;
             $sub->is_active = 1;
             $sub->page_id = 5;
             $sub->save();
@@ -150,8 +153,8 @@ class PagesSeeder extends Seeder
             $subL->local = 'en';
             $subL->save();
         }
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //  SubPage Locales // Fəaliyyət
 
@@ -189,9 +192,7 @@ class PagesSeeder extends Seeder
             $subL->save();
         }
 
-
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         //  SubPage Locales // Qanunvericilik
 
@@ -227,9 +228,7 @@ class PagesSeeder extends Seeder
             $subL->save();
         }
 
-
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         //  SubPage Locales // Layihələr
 
@@ -264,9 +263,7 @@ class PagesSeeder extends Seeder
             $subL->save();
         }
 
-
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         //  SubPage Locales // Multimedia
 

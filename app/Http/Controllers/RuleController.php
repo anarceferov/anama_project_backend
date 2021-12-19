@@ -25,6 +25,11 @@ class RuleController extends Controller
     }
 
 
+    public function show($id)
+    {
+    }
+
+
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -39,12 +44,6 @@ class RuleController extends Controller
         });
 
         return $this->dataResponse(['rule_id' => $rule_id], 201);
-    }
-
-
-    public function show($id)
-    {
-        
     }
 
 

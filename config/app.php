@@ -8,6 +8,8 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    'FILE_PATH' => env('FILE_PATH', 'localhost:8000'),
+
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL', null),

@@ -22,6 +22,17 @@ class PhotoFolderController extends Controller
     }
 
 
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $photoFolder = PhotoFolder::with('locales' , 'photos')->findOrFail($id);
+        } else {
+            $photoFolder = PhotoFolder::with('locale' , 'photos')->findOrFail($id);
+        }
+        return $this->dataResponse($photoFolder);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules() , $this->customAttributes());
@@ -40,17 +51,6 @@ class PhotoFolderController extends Controller
         });
 
         return $this->dataResponse(['photoFolder_id' => $photoFolder_id], 201);
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $photoFolder = PhotoFolder::with('locales' , 'photos')->findOrFail($id);
-        } else {
-            $photoFolder = PhotoFolder::with('locale' , 'photos')->findOrFail($id);
-        }
-        return $this->dataResponse($photoFolder);
     }
 
 

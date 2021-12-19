@@ -24,6 +24,18 @@ class EmployeeController extends Controller
         return $this->dataResponse($employees->simplePaginate($this->getPerPage()));
     }
 
+
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $employee = Employee::with('image', 'locales')->findOrFail($id);
+        } else {
+            $employee = Employee::with('image', 'locale')->findOrFail($id);
+        }
+        return $this->dataResponse($employee);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -78,17 +90,6 @@ class EmployeeController extends Controller
         });
 
         return $this->successResponse(trans("responses.ok"));
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $employee = Employee::with('image', 'locales')->findOrFail($id);
-        } else {
-            $employee = Employee::with('image', 'locale')->findOrFail($id);
-        }
-        return $this->dataResponse($employee);
     }
 
 

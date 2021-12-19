@@ -27,6 +27,17 @@ class QualityController extends Controller
     }
 
 
+    public function show($id)
+    {
+        if (auth()->check()) {
+            $quality = Quality::with('image', 'locales')->findOrFail($id);
+        } else {
+            $quality = Quality::with('image', 'locale')->findOrFail($id);
+        }
+        return $this->dataResponse($quality);
+    }
+
+    
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -81,17 +92,6 @@ class QualityController extends Controller
         });
 
         return $this->successResponse(trans("responses.ok"));
-    }
-
-
-    public function show($id)
-    {
-        if (auth()->check()) {
-            $quality = Quality::with('image', 'locales')->findOrFail($id);
-        } else {
-            $quality = Quality::with('image', 'locale')->findOrFail($id);
-        }
-        return $this->dataResponse($quality);
     }
 
 

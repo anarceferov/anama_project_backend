@@ -25,6 +25,11 @@ class PhotoController extends Controller
     }
 
 
+    public function show($id)
+    {
+    }
+
+    
     public function store(Request $request)
     {
 
@@ -42,11 +47,6 @@ class PhotoController extends Controller
         $photo_id = $photo->id;
 
         return $this->dataResponse(['photo_id' => $photo_id], 201);
-    }
-
-
-    public function show($id)
-    {
     }
 
 
