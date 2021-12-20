@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Services\FileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Traits\ApiResponder;
+use App\Http\Controllers\Controller;
 
 
 class FileController extends Controller
