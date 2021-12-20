@@ -124,6 +124,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::apiResource('data/regions', RegionDataController::class);
     Route::apiResource('leaderships', LeaderShipController::class);
     Route::apiResource('partners', PartnerController::class);
+    Route::apiResource('tests', PartnerController::class);
     Route::post("/image", [FileController::class, "uploadSingleImage"]);
     Route::post("/file", [FileController::class, "uploadFile"]);
     Route::post("/video", [FileController::class, "uploadVideo"]);
