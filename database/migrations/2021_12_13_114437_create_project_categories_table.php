@@ -16,7 +16,6 @@ class CreateProjectCategoriesTable extends Migration
         Schema::create('project_categories', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

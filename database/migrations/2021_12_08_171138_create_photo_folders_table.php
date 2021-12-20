@@ -18,7 +18,6 @@ class CreatePhotoFoldersTable extends Migration
             $table->id();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
             $table->integer('order')->nullable()->unique();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

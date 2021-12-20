@@ -6,12 +6,11 @@ use App\Traits\Localizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\AboutLocale;
 
 class About extends Model
 {
-    use HasFactory, SoftDeletes, Localizable;
+    use HasFactory, Localizable;
     protected $keyType = 'integer';
     protected $fillable = ['image_uuid', 'about_category_id'];
     protected $localeModel = AboutLocale::class;

@@ -5,16 +5,15 @@ namespace App\Models;
 use App\Traits\Localizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\SubPage;
 
 class Page extends Model
 {
-    use HasFactory, Localizable, SoftDeletes;
+    use HasFactory, Localizable;
     protected $localeModel = PageLocale::class;
     protected $localableFields = ['name', 'local'];
     protected $keyType = 'integer';
-    protected $fillable = ['is_active', 'key'];
+    protected $fillable = ['is_active', 'key' , 'image_uuid'];
     public $timestamps = false;
 
     public function subPages()

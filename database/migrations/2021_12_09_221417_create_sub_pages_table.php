@@ -14,7 +14,6 @@ class CreateSubPagesTable extends Migration
             $table->string('key')->unique()->nullable();
             $table->integer('is_active')->default(0);
             $table->bigInteger('page_id')->unsigned();
-
             $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
         });
     }

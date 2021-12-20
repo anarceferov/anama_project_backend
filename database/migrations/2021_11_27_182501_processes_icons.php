@@ -19,7 +19,6 @@ class ProcessesIcons extends Migration
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
             $table->foreignUuid("icon_uuid")->constrained("files")->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

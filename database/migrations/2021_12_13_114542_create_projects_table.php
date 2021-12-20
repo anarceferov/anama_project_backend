@@ -17,7 +17,6 @@ class CreateProjectsTable extends Migration
             $table->id();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
             $table->bigInteger('project_category_id')->unsigned();
-            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('project_category_id')->references('id')->on('project_categories')->onDelete('cascade')->onUpdate('cascade');

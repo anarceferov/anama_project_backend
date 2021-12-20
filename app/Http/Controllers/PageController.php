@@ -38,14 +38,15 @@ class PageController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+        $this->validate($request, $this->getValidationRules($id), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $page = page::findOrFail($id);
 
             $page->fill($request->only([
                 'is_active',
-                'key'
+                'key',
+                'image_uuid'
             ]));
 
             $page->save();
@@ -66,7 +67,8 @@ class PageController extends Controller
             $page = new Page();
             $page->fill($request->only([
                 'is_active',
-                'key'
+                'key',
+                'image_uuid'
             ]));
 
             $page->save();
@@ -75,7 +77,7 @@ class PageController extends Controller
 
             $page_id = $page->id;
         });
-
+ 
         return $this->dataResponse(['page_id' => $page_id], 201);
     }
 
@@ -92,10 +94,12 @@ class PageController extends Controller
     }
 
 
-    private function getValidationRules(): array
+    private function getValidationRules($id = null): array
     {
+        // dd($id);
         return [
-            'key' => 'unique:pages',
+            'image_uuid' => 'required|exists:files,id',
+            'key' => 'unique:pages,key,'.$id,
             'is_active' => 'required|boolean',
             'locales.*.local' => 'required',
             'locales.*.name' => 'required',
@@ -105,6 +109,8 @@ class PageController extends Controller
     public function customAttributes(): array
     {
         return [
+            'image_uuid.required' => 'Image id mütləqdir',
+            'image_uuid.exists' => 'Image id mövcud deyil',
             'is_active.required' => 'Status',
             'is_active.boolean' => 'Status 1 və ya 0 ola bilər',
             'locales.*.name.required' => 'Sehifə adı mütləqdir',

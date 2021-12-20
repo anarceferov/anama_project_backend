@@ -6,11 +6,10 @@ use App\Traits\Localizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Process extends Model
 {
-    use HasFactory , SoftDeletes , Localizable;
+    use HasFactory , Localizable;
     protected $localeModel = ProcessLocale::class;
     protected $localableFields = ['text'];
     protected $keyType = 'integer';

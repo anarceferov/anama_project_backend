@@ -16,7 +16,6 @@ class CreateTrainingsTable extends Migration
             $table->string('tel' , 20)->nullable();
             $table->string('email')->nullable();
             $table->string('sector')->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

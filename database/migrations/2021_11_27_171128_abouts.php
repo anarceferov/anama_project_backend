@@ -15,8 +15,6 @@ class Abouts extends Migration
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
             $table->bigInteger('about_category_id')->unsigned()->nullable();
             $table->timestamps();
-            $table->softDeletes();
-
             $table->foreign('about_category_id')->references('id')->on('about_categories')->onDelete('cascade');
         });
     }

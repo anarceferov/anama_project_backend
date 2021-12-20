@@ -14,7 +14,6 @@ class CreateTrainingCategoryLocalesTable extends Migration
             $table->string('name');
             $table->foreignId("training_category_id")->constrained("training_categories")->nullable()->onDelete('cascade');
             $table->string('local' , 3)->default('az');
-
             $table->timestamps();
         });
     }

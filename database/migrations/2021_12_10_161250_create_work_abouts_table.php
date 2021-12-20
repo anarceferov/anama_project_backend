@@ -16,7 +16,6 @@ class CreateWorkAboutsTable extends Migration
         Schema::create('work_abouts', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

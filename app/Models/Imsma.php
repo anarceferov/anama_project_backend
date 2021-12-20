@@ -6,12 +6,10 @@ use App\Traits\FileRelation;
 use App\Traits\Localizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Imsma extends Model
 {
-    use HasFactory, SoftDeletes, Localizable , FileRelation;
+    use HasFactory , Localizable , FileRelation;
     protected $localeModel = ImsmaLocale::class;
     protected $keyType = 'integer';
     protected $localableFields = ['text'];

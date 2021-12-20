@@ -6,12 +6,11 @@ use App\Traits\FileRelation;
 use App\Traits\Localizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\NewsCategory;
 
 class News extends Model
 {
-    use HasFactory, SoftDeletes, Localizable , FileRelation;
+    use HasFactory, Localizable , FileRelation;
 
     protected $localeModel = NewsLocale::class;
     protected $keyType = 'integer';

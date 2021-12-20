@@ -15,7 +15,6 @@ class CreateLegislationsTable extends Migration
     {
         Schema::create('legislations', function (Blueprint $table) {
             $table->id();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

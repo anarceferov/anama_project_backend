@@ -18,7 +18,6 @@ class Imsmas extends Migration
             $table->id();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

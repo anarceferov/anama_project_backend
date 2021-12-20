@@ -19,7 +19,6 @@ class Chronologies extends Migration
             $table->year('date')->nullable();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

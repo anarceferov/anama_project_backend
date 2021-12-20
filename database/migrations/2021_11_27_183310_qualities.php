@@ -18,7 +18,6 @@ class Qualities extends Migration
             $table->id();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

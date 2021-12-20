@@ -15,7 +15,6 @@ class CreateNationalStandartCategoriesTable extends Migration
     {
         Schema::create('national_standart_categories', function (Blueprint $table) {
             $table->id();
-            $table->softDeletes();
             $table->timestamps();
         });
     }
