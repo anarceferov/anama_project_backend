@@ -34,7 +34,7 @@ class FileService
             "extension" => $ext
         ])->save();
 
-        return $this->model;
+        return $this->model; 
     }
 
     private function createNewPhotoName(string $ext): string
