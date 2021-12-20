@@ -16,14 +16,14 @@ class AboutController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $about = AboutCategory::with('locales' , 'abouts');
+            $about = AboutCategory::with('locales', 'abouts');
         } else {
-            $about = AboutCategory::with('locale' , 'about');
+            $about = AboutCategory::with('locale', 'about');
         }
         return $this->dataResponse($about->simplePaginate($this->getPerPage()));
     }
 
-    
+
     public function show($id)
     {
         if (auth()->check()) {

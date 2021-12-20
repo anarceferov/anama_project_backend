@@ -36,7 +36,7 @@ class RegionDataController extends Controller
         return $this->dataResponse($data);
     }
 
-    
+
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());

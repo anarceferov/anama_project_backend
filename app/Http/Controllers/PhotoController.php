@@ -53,7 +53,7 @@ class PhotoController extends Controller
     public function update(Request $request, $id)
     {
 
-        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+        $this->validate($request, $this->getValidationRules($id), $this->customAttributes());
 
         $photo = Photo::findOrFail($id);
         $photo->updated_at = now();
@@ -71,12 +71,12 @@ class PhotoController extends Controller
     }
 
 
-    private function getValidationRules(): array
+    private function getValidationRules($id = null): array
     {
         return [
             'photo_folder_id' => 'required|numeric|exists:photo_folders,id',
             'image_uuid' => 'required|exists:files,id',
-            'order' => 'required|numeric|unique:photos',
+            'order' => 'required|numeric|unique:photos,order,'.$id,
         ];
     }
 

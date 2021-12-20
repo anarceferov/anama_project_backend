@@ -25,12 +25,12 @@ class PagesSeeder extends Seeder
         ];
 
         $pagesEn = [
-            'Agentlik_en',
-            'Fəaliyyət_en',
-            'Qanunvericilik_en',
-            'Layihələr_en',
-            'Multimedia_en',
-            'Əlaqə_en'
+            'Agency',
+            'Activity',
+            'Legislation',
+            'Projects',
+            'Multimedia',
+            'Contacts'
         ];
         // Page creat
         for ($i = 0; $i < count($pagesAz); $i++) {
@@ -128,10 +128,10 @@ class PagesSeeder extends Seeder
         ];
 
         $en1 = [
-            'Haqqımızda_en',
-            'Rəhbərlik_en',
-            'Struktur_en',
-            'İctimai Şura_en'
+            'About us',
+            'Management',
+            'Structure',
+            'Public Council'
         ];
 
         $a = 0;
@@ -166,10 +166,10 @@ class PagesSeeder extends Seeder
         ];
 
         $en2 = [
-            'Əməliyyatlar_en',
-            'Monitorinq və Keyfiyyətə nəzarət_en',
-            'İMSMA_en',
-            'Maarifləndirmə İşləri_en'
+            'Operations',
+            'Monitoring and quality control',
+            'Imsma',
+            'Enlightenment works'
         ];
 
         $a = 4;
@@ -203,9 +203,9 @@ class PagesSeeder extends Seeder
         ];
 
         $en3 = [
-            'Nizamnamə_en',
-            'Qanun_en',
-            'Milli standartlar_en'
+            'Charter',
+            'Law',
+            'National standards'
         ];
 
         $a = 8;
@@ -238,8 +238,8 @@ class PagesSeeder extends Seeder
         ];
 
         $en4 = [
-            'Qarabağ_en',
-            'İcra olunan layihələr_en'
+            'Karabakh',
+            'Implemented projects'
         ];
 
 
@@ -274,9 +274,9 @@ class PagesSeeder extends Seeder
         ];
 
         $en5 = [
-            'Xəbərlər_en',
-            'Press - Relizləər_en',
-            'Foto/Video_en'
+            'News',
+            'Press Release',
+            'Photo / Video'
         ];
 
 

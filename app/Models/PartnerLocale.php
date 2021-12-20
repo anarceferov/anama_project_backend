@@ -6,9 +6,9 @@ use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PhotoFolderLocale extends Model
+class PartnerLocale extends Model
 {
-    use HasFactory , UsesUuid;
+    use HasFactory, UsesUuid;
     protected $keyType = 'string';
-    protected $fillable = ['photo_folder_id', 'name', 'local' , 'text'];
+    protected $fillable = ['partner_id', 'name', 'local' , 'text'];
 }

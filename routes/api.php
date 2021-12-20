@@ -6,17 +6,21 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AllProjectCategoryController;
 use App\Http\Controllers\AllProjectController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\ChronologyController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\HomeVideoController;
 use App\Http\Controllers\ImsmaController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\LeaderShipController;
 use App\Http\Controllers\LegislationController;
 use App\Http\Controllers\NationalStandartCategoryController;
 use App\Http\Controllers\NationalStandartController;
 use App\Http\Controllers\NewsCategoryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\PhotoFolderController;
 use App\Http\Controllers\PressController;
@@ -43,8 +47,10 @@ Route::middleware('locale')->group(function () {
     Route::apiResource('trainings', TrainingController::class)->only('store');
     Route::apiResource('pages', PageController::class)->only(['index', 'show']);
     Route::apiResource('rules', RuleController::class)->only(['index', 'show']);
+    Route::apiResource('banners', BannerController::class)->only(['index', 'show']);
     Route::apiResource('sub/pages', SubPagesController::class)->only(['index', 'show']);
     Route::apiResource('work/abouts', WorkAboutController::class)->only(['index', 'show']);
+    Route::apiResource('home/videos', HomeVideoController::class)->only(['index', 'show']);
     Route::apiResource('videos', VideoController::class)->only(['index', 'show']);
     Route::apiResource('presses', PressController::class)->only(['index', 'show']);
     Route::apiResource('processesIcons', ProcessIconController::class)->only(['index', 'show']);
@@ -55,7 +61,7 @@ Route::middleware('locale')->group(function () {
     Route::apiResource('employees', EmployeeController::class)->only(['index', 'show']);
     Route::apiResource('languages', LanguageController::class)->only(['index', 'show']);
     Route::apiResource('legislations', LegislationController::class)->only(['index', 'show']);
-    Route::apiResource('abouts', AboutController::class)->only(['index', 'show']);
+    Route::apiResource('abouts', AboutController::class)->only(['indexte', 'show']);
     Route::apiResource('about/categories', AboutCategoryController::class)->only(['index', 'show']);
     Route::apiResource('national/standarts', NationalStandartController::class)->only(['index', 'show']);
     Route::apiResource('national/standart/categories', NationalStandartCategoryController::class)->only(['index', 'show']);
@@ -71,6 +77,8 @@ Route::middleware('locale')->group(function () {
     Route::apiResource('project/categories', ProjectCategoryController::class)->only(['index', 'show']);
     Route::apiResource('regions', RegionController::class)->only(['index', 'show']);
     Route::apiResource('data/regions', RegionDataController::class)->only(['index', 'show']);
+    Route::apiResource('leaderships', LeaderShipController::class)->only(['index', 'show']);
+    Route::apiResource('partners', PartnerController::class)->only(['index', 'show']);
 });
 
 
@@ -84,8 +92,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::apiResource('pages', PageController::class);
     Route::apiResource('rules', RuleController::class);
+    Route::apiResource('banners', BannerController::class);
     Route::apiResource('sub/pages', SubPagesController::class);
     Route::apiResource('work/abouts', WorkAboutController::class);
+    Route::apiResource('home/videos', HomeVideoController::class);
     Route::apiResource('videos', VideoController::class);
     Route::apiResource('presses', PressController::class);
     Route::apiResource('processesIcons', ProcessIconController::class);
@@ -112,6 +122,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::apiResource('photo/folders', PhotoFolderController::class);
     Route::apiResource('regions', RegionController::class);
     Route::apiResource('data/regions', RegionDataController::class);
+    Route::apiResource('leaderships', LeaderShipController::class);
+    Route::apiResource('partners', PartnerController::class);
     Route::post("/image", [FileController::class, "uploadSingleImage"]);
     Route::post("/file", [FileController::class, "uploadFile"]);
+    Route::post("/video", [FileController::class, "uploadVideo"]);
 });

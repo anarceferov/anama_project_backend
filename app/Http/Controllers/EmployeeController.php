@@ -61,7 +61,7 @@ class EmployeeController extends Controller
     public function update(Request $request, $id)
     {
 
-        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+        $this->validate($request, $this->getValidationRules($id), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $employee = Employee::findOrFail($id);
@@ -93,11 +93,11 @@ class EmployeeController extends Controller
     }
 
 
-    private function getValidationRules(): array
+    private function getValidationRules($id = null): array
     {
         return [
             'image_uuid' => 'required|exists:files,id',
-            'order' => 'required|numeric|unique:employees',
+            'order' => 'required|numeric|unique:employees,order,'.$id,
             'locales.*.local' => 'required',
             'locales.*.text' => 'required',
             'locales.*.position_name' => 'required',

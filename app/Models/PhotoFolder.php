@@ -10,7 +10,7 @@ class PhotoFolder extends Model
 {
     use HasFactory , Localizable;
     protected $localeModel = PhotoFolderLocale::class;
-    protected $localableFields = ['name'];
+    protected $localableFields = ['name' , 'text'];
     protected $keyType = 'integer';
     protected $fillable = ['image_uuid' , 'order'];
 

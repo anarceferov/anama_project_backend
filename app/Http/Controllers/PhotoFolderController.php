@@ -14,9 +14,9 @@ class PhotoFolderController extends Controller
     {
 
         if (auth()->check()) {
-            $photos = PhotoFolder::with('locales' , 'photos' , 'image')->orderBy('created_at' , 'desc')->get();
+            $photos = PhotoFolder::with('locales', 'image', 'photos')->orderBy('created_at', 'desc')->get();
         } else {
-            $photos = PhotoFolder::with('locale' , 'photos' , 'image')->orderBy('created_at' , 'desc')->get();
+            $photos = PhotoFolder::with('locale', 'image', 'photos')->orderBy('created_at', 'desc')->get();
         }
         return $this->dataResponse($photos);
     }
@@ -25,17 +25,17 @@ class PhotoFolderController extends Controller
     public function show($id)
     {
         if (auth()->check()) {
-            $photoFolder = PhotoFolder::with('locales' , 'photos')->findOrFail($id);
+            $photoFolder = PhotoFolder::with('locales', 'image', 'photos')->findOrFail($id);
         } else {
-            $photoFolder = PhotoFolder::with('locale' , 'photos')->findOrFail($id);
+            $photoFolder = PhotoFolder::with('locale', 'image', 'photos')->findOrFail($id);
         }
         return $this->dataResponse($photoFolder);
     }
 
-    
+
     public function store(Request $request)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
 
         $photoFolder_id = null;
         DB::transaction(function () use ($request, &$photoFolder_id) {
@@ -56,7 +56,7 @@ class PhotoFolderController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->getValidationRules() , $this->customAttributes());
+        $this->validate($request, $this->getValidationRules($id), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $photoFolder = PhotoFolder::findOrFail($id);
@@ -82,13 +82,13 @@ class PhotoFolderController extends Controller
     }
 
 
-    private function getValidationRules(): array
+    private function getValidationRules($id = null): array
     {
         return [
             'image_uuid' => 'required|exists:files,id',
             'locales.*.local' => 'required',
             'locales.*.name' => 'required',
-            'order' => 'required|numeric|unique:photo_folders',
+            'order' => 'required|numeric|unique:photo_folders,order,'.$id,
         ];
     }
 

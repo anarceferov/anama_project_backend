@@ -5,14 +5,10 @@ namespace App\Http\Controllers;
 use App\Services\FileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponder;
 
-/**
- * Class FileController
- * @package App\Http\Controllers
- */
+
 class FileController extends Controller
 {
     use ApiResponder;
@@ -37,6 +33,28 @@ class FileController extends Controller
         return $this->dataResponse(['image__uuid' => $image->getKey()]);
     }
 
+
+    public function uploadFile(Request $request): JsonResponse
+    {
+        $this->validate($request, [
+            'file_uuid' => 'required|file|mimes:pdf,doc,docx'
+        ]);
+
+        $file = $this->fileService->uploadFile($request->file('file_uuid'));
+        return $this->dataResponse(['file_uuid' => $file->getKey()]);
+    }
+
+
+    public function uploadVideo(Request $request): JsonResponse
+    {
+        $this->validate($request, [
+            'video_uuid' => 'required'
+        ]);
+
+        $video = $this->fileService->uploadFile($request->file('video_uuid'));
+        return $this->dataResponse(['video_uuid' => $video->getKey()]);
+    }
+
     // public function uploadSingleIcon(Request $request): JsonResponse
     // {
     //     $this->validate($request, [
@@ -48,13 +66,4 @@ class FileController extends Controller
     //     return $this->dataResponse(['icon__uuid' => $icon->getKey()]);
     // }
 
-    public function uploadFile(Request $request): JsonResponse
-    {
-        $this->validate($request, [
-            'file_uuid' => 'required|file|mimes:pdf,doc,docx'
-        ]);
-
-        $image = $this->fileService->uploadFile($request->file('file_uuid'));
-        return $this->dataResponse(['file_uuid' => $image->getKey()]);
-    }
 }

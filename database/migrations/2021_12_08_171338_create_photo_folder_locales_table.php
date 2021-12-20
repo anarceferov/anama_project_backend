@@ -13,6 +13,7 @@ class CreatePhotoFolderLocalesTable extends Migration
             $table->uuid("id")->primary()->unique()->index();
             $table->foreignId("photo_folder_id")->constrained("photo_folders")->nullable()->onDelete('cascade');
             $table->string('name')->nullable();
+            $table->longText('text')->nullable();
             $table->string('local' , 3)->default('az');
             $table->timestamps();
         });

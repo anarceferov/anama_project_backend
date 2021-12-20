@@ -62,7 +62,7 @@ class SubPagesController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
+        $this->validate($request, $this->getValidationRules($id), $this->customAttributes());
 
         DB::transaction(function () use ($request, $id) {
             $subPage = SubPage::findOrFail($id);
@@ -93,10 +93,10 @@ class SubPagesController extends Controller
         return $this->successResponse(trans('responses.ok'));
     }
 
-    private function getValidationRules(): array
+    private function getValidationRules($id = null): array
     {
         return [
-            'key' => 'unique:sub_pages',
+            'key' => 'unique:sub_pages,key,'.$id,
             'page_id' => 'required|numeric',
             'is_active' => 'required|boolean',
             'locales.*.local' => 'required',
