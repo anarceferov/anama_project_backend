@@ -18,9 +18,9 @@ class NewsCategoryController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $categories = NewsCategory::with('locales' , 'news');
+            $categories = NewsCategory::with('locales', 'news');
         } else {
-            $categories = NewsCategory::with('locale' , 'oneNews');
+            $categories = NewsCategory::with('locale', 'oneNews');
         }
         return $this->dataResponse($categories->simplePaginate($this->getPerPage()));
     }
@@ -29,9 +29,9 @@ class NewsCategoryController extends Controller
     public function show($id)
     {
         if (auth()->check()) {
-            $category = NewsCategory::with('locales' , 'news')->findOrFail($id);
+            $category = NewsCategory::with('locales', 'news')->findOrFail($id);
         } else {
-            $category = NewsCategory::with('locale' , 'OneNews')->findOrFail($id);
+            $category = NewsCategory::with('locale', 'OneNews')->findOrFail($id);
         }
         return $this->dataResponse($category);
     }

@@ -7,6 +7,7 @@ use App\Traits\Localizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\NewsCategory;
+use App\Models\File;
 
 class News extends Model
 {
@@ -25,4 +26,13 @@ class News extends Model
         return $this->belongsTo(NewsCategory::class , 'news_category_id' , 'id')->with('locale');
     }
 
+    public function categories()
+    {
+        return $this->belongsTo(NewsCategory::class , 'news_category_id' , 'id')->with('locales');
+    }
+
+    // public function image()
+    // {
+    //     return $this->belongsTo(File::class , 'image_uuid');
+    // }
 }

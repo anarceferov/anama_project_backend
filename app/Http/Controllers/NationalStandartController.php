@@ -18,9 +18,9 @@ class NationalStandartController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $nationalStandart = NationalStandartCategory::with('locales' , 'nationalStandarts');
+            $nationalStandart = NationalStandart::with('locales', 'categories');
         } else {
-            $nationalStandart = NationalStandartCategory::with('locale' , 'nationalStandart');
+            $nationalStandart = NationalStandart::with('locale', 'category');
         }
         return $this->dataResponse($nationalStandart->simplePaginate($this->getPerPage()));
     }
@@ -29,9 +29,9 @@ class NationalStandartController extends Controller
     public function show($id)
     {
         if (auth()->check()) {
-            $nationalStandart = NationalStandart::with('locales')->findOrFail($id);
+            $nationalStandart = NationalStandart::with('locales', 'categories')->findOrFail($id);
         } else {
-            $nationalStandart = NationalStandart::with('locale')->findOrFail($id);
+            $nationalStandart = NationalStandart::with('locale', 'category')->findOrFail($id);
         }
         return $this->dataResponse($nationalStandart);
     }

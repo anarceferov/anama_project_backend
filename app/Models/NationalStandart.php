@@ -15,4 +15,13 @@ class NationalStandart extends Model
     protected $localableFields = ['text'];
     protected $fillable = ['text'];
 
+    public function categories()
+    {
+        return $this->belongsTo(NationalStandartCategory::class , 'national_standart_category_id')->with('locales');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(NationalStandartCategory::class , 'national_standart_category_id')->with('locale');
+    }
 }
