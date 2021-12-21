@@ -14,4 +14,6 @@ class Video extends Model
     protected $localableFields = ['title'];
     protected $keyType = 'integer';
     protected $fillable = ['url'];
+
+    
 }

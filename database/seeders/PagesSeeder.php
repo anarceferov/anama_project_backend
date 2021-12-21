@@ -32,10 +32,20 @@ class PagesSeeder extends Seeder
             'Multimedia',
             'Contacts'
         ];
+
+        $tests = array_combine($pagesEn, $pagesAz);
+
         // Page creat
-        for ($i = 0; $i < count($pagesAz); $i++) {
+        // for ($i = 0; $i < count($pagesAz); $i++) {
+        //     $page = new Page();
+        //     $page->key = $i;
+        //     $page->is_active = 1;
+        //     $page->save();
+        // }
+
+        foreach ($tests as $key => $test) {
             $page = new Page();
-            $page->key = $i;
+            $page->key = Str::slug($key);
             $page->is_active = 1;
             $page->save();
         }
@@ -63,57 +73,93 @@ class PagesSeeder extends Seeder
         }
 
         // SubPages create  Agentlik
-        for ($i = 0; $i < 4; $i++) {
+        $en1 = [
+            'About us',
+            'Management',
+            'Structure',
+            'Public Council'
+        ];
+
+        foreach ($en1 as $en) {
             $sub = new SubPage;
-            $sub->key = $i;
+            $sub->key = str::slug($en);
             $sub->is_active = 1;
             $sub->page_id = 1;
             $sub->save();
         }
 
         // SubPages create  Fəaliyyət
-        $sub1 = 4;
-        for ($i = 0; $i < 4; $i++) {
-            $sub1++;
+        $en2 = [
+            'Operations',
+            'Monitoring and quality control',
+            'Imsma',
+            'Enlightenment works'
+        ];
+
+        foreach ($en2 as $en) {
             $sub = new SubPage;
-            $sub->key = $sub1;
+            $sub->key = str::slug($en);
             $sub->is_active = 1;
             $sub->page_id = 2;
             $sub->save();
         }
 
         // SubPages create  Qanunvericilik
-        $sub2 = 8;
-        for ($i = 0; $i < 3; $i++) {
-            $sub2++;
+        $en3 = [
+            'Charter',
+            'Law',
+            'National standards'
+        ];
+
+        foreach ($en3 as $en) {
             $sub = new SubPage;
-            $sub->key = $sub2;
+            $sub->key = str::slug($en);
             $sub->is_active = 1;
             $sub->page_id = 3;
             $sub->save();
         }
 
         // SubPages create  Layihələr
-        $sub3 = 11;
-        for ($i = 0; $i < 2; $i++) {
-            $sub3++;
+        $en4 = [
+            'Karabakh',
+            'Implemented projects'
+        ];
+
+        foreach ($en4 as $en) {
             $sub = new SubPage;
-            $sub->key = $sub3;
+            $sub->key = str::slug($en);
             $sub->is_active = 1;
             $sub->page_id = 4;
             $sub->save();
         }
 
         // SubPages create  Multimedia
-        $sub4 = 13;
-        for ($i = 0; $i < 3; $i++) {
-            $sub4++;
+        $en5 = [
+            'News',
+            'Press Release',
+            'Photo / Video'
+        ];
+
+        foreach($en5 as $en) {
             $sub = new SubPage;
-            $sub->key = $sub4;
+            $sub->key = str::slug($en);
             $sub->is_active = 1;
             $sub->page_id = 5;
             $sub->save();
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -127,12 +173,6 @@ class PagesSeeder extends Seeder
             'İctimai Şura'
         ];
 
-        $en1 = [
-            'About us',
-            'Management',
-            'Structure',
-            'Public Council'
-        ];
 
         $a = 0;
         foreach ($az1 as $az) {
@@ -165,12 +205,6 @@ class PagesSeeder extends Seeder
             'Maarifləndirmə İşləri'
         ];
 
-        $en2 = [
-            'Operations',
-            'Monitoring and quality control',
-            'Imsma',
-            'Enlightenment works'
-        ];
 
         $a = 4;
         foreach ($az2 as $az) {
@@ -202,11 +236,6 @@ class PagesSeeder extends Seeder
             'Milli standartlar'
         ];
 
-        $en3 = [
-            'Charter',
-            'Law',
-            'National standards'
-        ];
 
         $a = 8;
         foreach ($az3 as $az) {
@@ -235,11 +264,6 @@ class PagesSeeder extends Seeder
         $az4 = [
             'Qarabağ',
             'İcra olunan layihələr'
-        ];
-
-        $en4 = [
-            'Karabakh',
-            'Implemented projects'
         ];
 
 
@@ -271,12 +295,6 @@ class PagesSeeder extends Seeder
             'Xəbərlər',
             'Press - Relizləər',
             'Foto/Video'
-        ];
-
-        $en5 = [
-            'News',
-            'Press Release',
-            'Photo / Video'
         ];
 
 

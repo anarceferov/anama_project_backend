@@ -13,7 +13,7 @@ class Imsma extends Model
     protected $localeModel = ImsmaLocale::class;
     protected $keyType = 'integer';
     protected $localableFields = ['text'];
-    protected $fillable = ['text', 'image_uuid'];
+    protected $fillable = ['image_uuid'];
 
     protected $file = File::class;
     protected $key  = 'image_uuid';

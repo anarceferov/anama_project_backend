@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\About;
 use App\Models\AboutCategory;
 use App\Traits\ApiResponder;
 use Illuminate\Http\Request;
@@ -15,9 +14,9 @@ class AboutCategoryController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $about = AboutCategory::with('locales' , 'abouts')->get();
+            $about = AboutCategory::with('abouts')->get();
         } else {
-            $about = AboutCategory::with('locale' , 'about')->get();
+            $about = AboutCategory::with('about')->get();
         }
 
         return $this->dataResponse($about);

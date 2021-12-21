@@ -6,6 +6,7 @@ use App\Models\About;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Traits\ApiResponder;
+use App\Models\AboutCategory;
 use App\Traits\Paginatable;
 
 class AboutController extends Controller
@@ -15,14 +16,14 @@ class AboutController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $about = About::with('image' , 'locales', 'category');
+            $about = AboutCategory::with('locales' , 'abouts');
         } else {
-            $about = About::with('image' , 'locale', 'category');
+            $about = AboutCategory::with('locale' , 'about');
         }
         return $this->dataResponse($about->simplePaginate($this->getPerPage()));
     }
 
-
+    
     public function show($id)
     {
         if (auth()->check()) {

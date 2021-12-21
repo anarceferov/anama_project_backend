@@ -8,6 +8,7 @@ use App\Http\Controllers\AllProjectController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\ChronologyController;
+use App\Http\Controllers\CountrySiteController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeVideoController;
@@ -37,7 +38,6 @@ use App\Http\Controllers\WorkAboutController;
 use App\Http\Controllers\RuleController;
 use App\Http\Controllers\TrainingCategoryController;
 use App\Http\Controllers\TrainingController;
-
 
 
 // FrontEnd Route
@@ -79,6 +79,7 @@ Route::middleware('locale')->group(function () {
     Route::apiResource('data/regions', RegionDataController::class)->only(['index', 'show']);
     Route::apiResource('leaderships', LeaderShipController::class)->only(['index', 'show']);
     Route::apiResource('partners', PartnerController::class)->only(['index', 'show']);
+    Route::apiResource('country/sites', CountrySiteController::class)->only(['index', 'show']);
 });
 
 
@@ -124,7 +125,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::apiResource('data/regions', RegionDataController::class);
     Route::apiResource('leaderships', LeaderShipController::class);
     Route::apiResource('partners', PartnerController::class);
-    Route::apiResource('tests', TestController::class);
+    Route::apiResource('country/sites', CountrySiteController::class);
     Route::post("/image", [FileController::class, "uploadSingleImage"]);
     Route::post("/file", [FileController::class, "uploadFile"]);
     Route::post("/video", [FileController::class, "uploadVideo"]);

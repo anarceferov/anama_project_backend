@@ -27,9 +27,15 @@ class PhotoController extends Controller
 
     public function show($id)
     {
+        if (auth()->check()) {
+            $photoFolder = Photo::with('folders')->findOrFail($id);
+        } else {
+            $photoFolder = Photo::with('folder')->findOrFail($id);
+        }
+        return $this->dataResponse($photoFolder);
     }
 
-    
+
     public function store(Request $request)
     {
 
@@ -76,7 +82,7 @@ class PhotoController extends Controller
         return [
             'photo_folder_id' => 'required|numeric|exists:photo_folders,id',
             'image_uuid' => 'required|exists:files,id',
-            'order' => 'required|numeric|unique:photos,order,'.$id,
+            'order' => 'required|numeric|unique:photos,order,' . $id,
         ];
     }
 

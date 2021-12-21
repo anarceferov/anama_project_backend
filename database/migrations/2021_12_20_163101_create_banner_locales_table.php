@@ -14,7 +14,10 @@ class CreateBannerLocalesTable extends Migration
     public function up()
     {
         Schema::create('banner_locales', function (Blueprint $table) {
-            $table->id();
+            $table->uuid("id")->primary()->unique()->index();
+            $table->string('local', 3);
+            $table->foreignId("banner_id")->constrained("banners")->onDelete('cascade');
+            $table->longText('text')->nullable();
             $table->timestamps();
         });
     }

@@ -3,18 +3,14 @@
 namespace App\Models;
 
 use App\Traits\FileRelation;
-use App\Traits\Localizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\BannerLocale;
 
-class Banner extends Model
+class CountrySite extends Model
 {
-    use HasFactory, Localizable, FileRelation;
-    protected $localeModel = BannerLocale::class;
+    use HasFactory , FileRelation;
     protected $keyType = 'integer';
-    protected $localableFields = ['text'];
-    protected $fillable = ['image_uuid'];
+    protected $fillable = ['image_uuid' , 'url'];
 
     protected $file = File::class;
     protected $key  = 'image_uuid';
