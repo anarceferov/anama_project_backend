@@ -33,19 +33,11 @@ class PagesSeeder extends Seeder
             'Contacts'
         ];
 
-        $tests = array_combine($pagesEn, $pagesAz);
+        // $tests = array_combine($pagesEn, $pagesAz);
 
-        // Page creat
-        // for ($i = 0; $i < count($pagesAz); $i++) {
-        //     $page = new Page();
-        //     $page->key = $i;
-        //     $page->is_active = 1;
-        //     $page->save();
-        // }
-
-        foreach ($tests as $key => $test) {
-            $page = new Page();
-            $page->key = Str::slug($key);
+        foreach ($pagesEn as $k) {
+            $page = new Page;
+            $page->key = Str::slug($k);
             $page->is_active = 1;
             $page->save();
         }
@@ -53,7 +45,7 @@ class PagesSeeder extends Seeder
         $a = 0;
         foreach ($pagesAz as $pageAz) {
             $a++;
-            $page = new PageLocale();
+            $page = new PageLocale;
             $page->id = Str::uuid();
             $page->page_id = $a;
             $page->name = $pageAz;
@@ -64,7 +56,7 @@ class PagesSeeder extends Seeder
         $b = 0;
         foreach ($pagesEn as $pageEn) {
             $b++;
-            $page = new PageLocale();
+            $page = new PageLocale;
             $page->id = Str::uuid();
             $page->page_id = $b;
             $page->name = $pageEn;
@@ -140,24 +132,13 @@ class PagesSeeder extends Seeder
             'Photo / Video'
         ];
 
-        foreach($en5 as $en) {
+        foreach ($en5 as $en) {
             $sub = new SubPage;
             $sub->key = str::slug($en);
             $sub->is_active = 1;
             $sub->page_id = 5;
             $sub->save();
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

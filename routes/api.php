@@ -36,6 +36,7 @@ use App\Http\Controllers\SubPagesController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\WorkAboutController;
 use App\Http\Controllers\RuleController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TrainingCategoryController;
 use App\Http\Controllers\TrainingController;
 
@@ -80,6 +81,7 @@ Route::middleware('locale')->group(function () {
     Route::apiResource('leaderships', LeaderShipController::class)->only(['index', 'show']);
     Route::apiResource('partners', PartnerController::class)->only(['index', 'show']);
     Route::apiResource('country/sites', CountrySiteController::class)->only(['index', 'show']);
+    Route::apiResource('statistics', StatisticsController::class)->only(['index', 'show']);
 });
 
 
@@ -126,6 +128,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::apiResource('leaderships', LeaderShipController::class);
     Route::apiResource('partners', PartnerController::class);
     Route::apiResource('country/sites', CountrySiteController::class);
+    Route::apiResource('statistics', StatisticsController::class);
     Route::post("/image", [FileController::class, "uploadSingleImage"]);
     Route::post("/file", [FileController::class, "uploadFile"]);
     Route::post("/video", [FileController::class, "uploadVideo"]);

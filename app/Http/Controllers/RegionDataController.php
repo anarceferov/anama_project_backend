@@ -64,7 +64,7 @@ class RegionDataController extends Controller
     {
         $this->validate($request, $this->getValidationRules($id), $this->customAttributes());
 
-        DB::transaction(function () use ($request, $id, &$data_id) {
+        DB::transaction(function () use ($request, $id) {
             $data = RegionData::findOrFail($id);
             $data->year = $request->year;
             $data->month = $request->month;
