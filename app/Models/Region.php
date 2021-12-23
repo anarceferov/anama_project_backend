@@ -13,17 +13,6 @@ class Region extends Model
     protected $localableFields = ['name'];
     protected $keyType = 'integer';
 
-
-    public function locales()
-    {
-        return $this->hasMany(RegionLocale::class , 'region_id');
-    }
-
-    public function locale()
-    {
-        return $this->hasOne(RegionLocale::class , 'region_id');
-    }
-
     public function data()
     {
         return $this->hasOne(RegionData::class , 'region_id');

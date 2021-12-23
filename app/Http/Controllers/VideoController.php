@@ -83,7 +83,7 @@ class VideoController extends Controller
     private function getValidationRules(): array
     {
         return [
-            'url' => 'required',
+            'url' => 'required|url',
             'locales.*.local' => 'required',
             'locales.*.title' => 'required',
         ];
@@ -93,6 +93,7 @@ class VideoController extends Controller
     {
         return [
             'url.required' => 'Url mütləqdir',
+            'url.url' => 'Url düzgün deyil',
             'locales.*.title.required' => 'Başlıq mütləqdir',
             'locales.*.local.required' => 'Dil seçimi mütləqdir'
         ];

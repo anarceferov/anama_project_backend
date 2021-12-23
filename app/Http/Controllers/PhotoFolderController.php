@@ -14,9 +14,9 @@ class PhotoFolderController extends Controller
     {
 
         if (auth()->check()) {
-            $photos = PhotoFolder::with('locales', 'image', 'photos')->orderBy('created_at', 'desc')->get();
+            $photos = PhotoFolder::with('locales', 'image', 'photos')->orderBy('created_at', 'asc')->get();
         } else {
-            $photos = PhotoFolder::with('locale', 'image', 'photos')->orderBy('created_at', 'desc')->get();
+            $photos = PhotoFolder::with('locale', 'image', 'photos')->orderBy('created_at', 'asc')->get();
         }
         return $this->dataResponse($photos);
     }
@@ -41,7 +41,7 @@ class PhotoFolderController extends Controller
         DB::transaction(function () use ($request, &$photoFolder_id) {
             $photoFolder = new PhotoFolder;
             $photoFolder->image_uuid = $request->image_uuid;
-            $photoFolder->order = $request->order;
+            // $photoFolder->order = $request->order;
             $photoFolder->created_at = now();
             $photoFolder->save();
 
@@ -62,7 +62,7 @@ class PhotoFolderController extends Controller
             $photoFolder = PhotoFolder::findOrFail($id);
             $photoFolder->updated_at = now();
             $photoFolder->image_uuid = $request->image_uuid;
-            $photoFolder->order = $request->order;
+            // $photoFolder->order = $request->order;
             $photoFolder->save();
 
             $photoFolder->setLocales($request->input("locales"));
@@ -88,7 +88,7 @@ class PhotoFolderController extends Controller
             'image_uuid' => 'required|exists:files,id',
             'locales.*.local' => 'required',
             'locales.*.name' => 'required',
-            'order' => 'required|numeric|unique:photo_folders,order,'.$id,
+            // 'order' => 'required|numeric|unique:photo_folders,order,'.$id,
         ];
     }
 

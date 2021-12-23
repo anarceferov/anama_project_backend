@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Traits\Localizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Photo;
+use App\Models\File;
 
 class PhotoFolder extends Model
 {
@@ -12,11 +14,11 @@ class PhotoFolder extends Model
     protected $localeModel = PhotoFolderLocale::class;
     protected $localableFields = ['name' , 'text'];
     protected $keyType = 'integer';
-    protected $fillable = ['image_uuid' , 'order'];
+    protected $fillable = ['image_uuid'];
 
     public function photos()
     {
-        return $this->hasMany(Photo::class);
+        return $this->hasMany(Photo::class)->with('images')->orderBy('created_at' , 'asc');
     }
 
     public function image()

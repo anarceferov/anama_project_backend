@@ -44,52 +44,90 @@ class PageSeeder extends Seeder
 
 
         // $pages = [
-        //     'Agentlik menusu' => [
-        //         'Haqqımızda',
-        //         'Rəhbərlik',
-        //         'Struktur',
-        //         'İctimai Şura'
-        //     ],
+            // 'Agentlik menusu' => [
+            //     'Haqqımızda',
+            //     'Rəhbərlik',
+            //     'Struktur',
+            //     'İctimai Şura'
+            // ],
 
-        //     'Fəaliyyət menusu' => [
-        //         'Əməliyyatlar',
-        //         'Monitorinq və Keyfiyyətə nəzarət',
-        //         'İMSMA',
-        //         'Maarifləndirmə İşləri'
-        //     ],
+            // 'Fəaliyyət menusu' => [
+            //     'Əməliyyatlar',
+            //     'Monitorinq və Keyfiyyətə nəzarət',
+            //     'İMSMA',
+            //     'Maarifləndirmə İşləri'
+            // ],
 
-        //     'Qanunvericilik' => [
-        //         'Nizamnamə',
-        //         'Qanun',
-        //         'Milli standartlar'
-        //     ],
+            // 'Qanunvericilik' => [
+            //     'Nizamnamə',
+            //     'Qanun',
+            //     'Milli standartlar'
+            // ],
 
-        //     'Layihələr' => [
-        //         'Qarabağ',
-        //         'İcra olunan layihələr'
-        //     ],
+            // 'Layihələr' => [
+            //     'Qarabağ',
+            //     'İcra olunan layihələr'
+            // ],
 
-        //     'Multimedia' => [
-        //         'Xəbərlər',
-        //         'Press - Relizləər',
-        //         'Foto/Video'
-        //     ],
+            // 'Multimedia' => [
+            //     'Xəbərlər',
+            //     'Press - Relizləər',
+            //     'Foto/Video'
+            // ],
 
-        //     'Əlaqə' => []
+            // 'Əlaqə' => []
+            // 'page' => [
+
+        //         'key' => [
+        //             'agency',
+        //             'activity',
+        //             'legislation',
+        //             'projects',
+        //             'multimedia',
+        //             'contacts'
+        //         ],
+
+        //         'name' => [
+        //             'Agentlik menusu',
+        //             'Fəaliyyət menusu:',
+        //             'Qanunvericilik:',
+        //             'Layihələr:',
+        //             'Multimedia:',
+        //             'Əlaqə'
+        //         ],
+
+        //         'nameEn' => [
+        //             'Agency',
+        //             'Activity',
+        //             'Legislation',
+        //             'Projects',
+        //             'Multimedia',
+        //             'Contacts'
+        //         ]
+        //     // ]
+
+
         // ];
 
-        // foreach ($pages as $key => $pageL) {
+        // foreach ($pages as $page) {
         //     $page = new Page;
-        //     $page->key = 'boom';
+        //     $page->key = $page->key;
         //     $page->is_active = 1;
         //     $page->save();
 
-        //     $pageL = new PageLocale;
-        //     $pageL->id = Str::uuid();
-        //     $pageL->page_id = $page->id;
-        //     $pageL->name = $key;
-        //     $pageL->local = 'az';
-        //     $pageL->save();
+        //     $pageAz = new PageLocale;
+        //     $pageAz->id = Str::uuid();
+        //     $pageAz->page_id = $page->id;
+        //     $pageAz->name = $page->name;
+        //     $pageAz->local = 'az';
+        //     $pageAz->save();
+
+        //     $pageEn = new PageLocale;
+        //     $pageEn->id = Str::uuid();
+        //     $pageEn->page_id = $page->id;
+        //     $pageEn->name = $page->nameEn;
+        //     $pageEn->local = 'en';
+        //     $pageEn->save();
         // }
 
 

@@ -7,6 +7,7 @@ use App\Models\PhotoFolder;
 use App\Traits\ApiResponder;
 use App\Traits\Paginatable;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PhotoController extends Controller
 {
@@ -17,9 +18,9 @@ class PhotoController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $photos = PhotoFolder::with('locales', 'photos')->orderBy('created_at', 'desc')->get();
+            $photos = PhotoFolder::with('locales', 'photos')->orderBy('created_at' , 'desc')->get();
         } else {
-            $photos = PhotoFolder::with('locale', 'photos')->orderBy('created_at', 'desc')->get();
+            $photos = PhotoFolder::with('locale', 'photos')->orderBy('created_at' , 'desc')->get();
         }
         return $this->dataResponse($photos);
     }
@@ -28,9 +29,9 @@ class PhotoController extends Controller
     public function show($id)
     {
         if (auth()->check()) {
-            $photoFolder = Photo::with('folders')->findOrFail($id);
+            $photoFolder = Photo::with('images', 'folders')->findOrFail($id);
         } else {
-            $photoFolder = Photo::with('folder')->findOrFail($id);
+            $photoFolder = Photo::with('images', 'folder')->findOrFail($id);
         }
         return $this->dataResponse($photoFolder);
     }
@@ -38,35 +39,77 @@ class PhotoController extends Controller
 
     public function store(Request $request)
     {
+        $folder_id = $request->photo_folder_id;
+        $this->validate($request, $this->storeVal($folder_id), $this->customAttributes());
 
-        $this->validate($request, $this->getValidationRules(), $this->customAttributes());
-
-        $photo_id = null;
+        // foreach ($request->images as $image) {
         $photo = new Photo;
         $photo->created_at = now();
         $photo->image_uuid = $request->image_uuid;
-        $photo->order = $request->order;
+        // $photo->order = $request->order;
         $photo->photo_folder_id = $request->photo_folder_id;
         $photo->save();
+        // }
+        return $this->successResponse(trans('responses.ok'));
+    }
 
 
-        $photo_id = $photo->id;
+    private function storeVal($folder_id = null): array
+    {
+        return [
+            'photo_folder_id' => 'required|numeric|exists:photo_folders,id',
+            'image_uuid' => 'required|exists:files,id',
+            // 'order' => 'required|numeric|unique:photos',
 
-        return $this->dataResponse(['photo_id' => $photo_id], 201);
+            // 'order' => [
+            //     'numeric',
+            //     'required',
+            //     Rule::unique('photos', 'order')->where(function ($query) use ($folder_id) {
+            //         $query->where('photo_folder_id', $folder_id);
+            //     })
+            // ],
+        ];
     }
 
 
     public function update(Request $request, $id)
     {
+        $folder_id = $request->photo_folder_id;
 
-        $this->validate($request, $this->getValidationRules($id), $this->customAttributes());
+        $this->validate($request, $this->getValidationRules($id, $folder_id), $this->storeCustom());
+
+        // foreach ($request->images as $image) {
 
         $photo = Photo::findOrFail($id);
         $photo->updated_at = now();
         $photo->image_uuid = $request->image_uuid;
-        $photo->order = $request->order;
+        // $photo->order = $request->order;
+        $photo->photo_folder_id = $request->photo_folder_id;
         $photo->save();
+        // }
+
         return $this->successResponse(trans('responses.ok'));
+    }
+
+
+    private function getValidationRules($id = null, $folder_id = null): array
+    {
+        return [
+            'photo_folder_id' => 'required|numeric|exists:photo_folders,id',
+            'image_uuid' => 'required|exists:files,id',
+            // 'order' => 'required|numeric|unique:photos,order,' . $id,
+
+            // 'order' => [
+            //     'numeric',
+            //     'required',
+            //     Rule::unique('photos', 'order')->where(function ($query) use ($folder_id, $id) {
+            //         $query->where([
+            //             ['photo_folder_id', $folder_id],
+            //             ['order', '!=', $id],
+            //         ]);
+            //     })
+            // ],
+        ];
     }
 
 
@@ -77,21 +120,23 @@ class PhotoController extends Controller
     }
 
 
-    private function getValidationRules($id = null): array
+    public function storeCustom(): array
     {
         return [
-            'photo_folder_id' => 'required|numeric|exists:photo_folders,id',
-            'image_uuid' => 'required|exists:files,id',
-            'order' => 'required|numeric|unique:photos,order,' . $id,
+            'photo_folder_id.required' => 'Photo folder adı mütləqdir',
+            'photo_folder_id.exists' => 'Photo folder id mövcud deyil',
+            'image_uuid.*.required' => 'Image id mütləqdir',
+            'image_uuid.exists' => 'Image id mövcud deyil',
         ];
     }
+
 
     public function customAttributes(): array
     {
         return [
             'photo_folder_id.required' => 'Photo folder adı mütləqdir',
             'photo_folder_id.exists' => 'Photo folder id mövcud deyil',
-            'image_uuid.required' => 'Image id mütləqdir',
+            'image_uuid.*.required' => 'Image id mütləqdir',
             'image_uuid.exists' => 'Image id mövcud deyil',
         ];
     }

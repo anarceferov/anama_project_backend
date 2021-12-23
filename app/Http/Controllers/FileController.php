@@ -22,6 +22,24 @@ class FileController extends Controller
     }
 
 
+    public function multiUpload(Request $request)
+    {
+        $this->validate($request, [
+            'images' => 'required',
+            'images.*' => 'mimes:jpeg,jpg,png',
+        ]);
+
+        $arr = [];
+        foreach ($request->file('images') as $file) {
+
+            $image = $this->fileService->uploadFile($file);
+
+            array_push($arr, $image->getkey());
+        }
+        return response(['images' => $arr]);
+    }
+
+
     public function uploadSingleImage(Request $request): JsonResponse
     {
         $this->validate($request, [

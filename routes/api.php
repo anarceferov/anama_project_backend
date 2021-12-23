@@ -41,9 +41,9 @@ use App\Http\Controllers\TrainingCategoryController;
 use App\Http\Controllers\TrainingController;
 
 
-// FrontEnd Route
+// Front Routes
 
-Route::middleware('locale')->group(function () {
+Route::prefix('client')->middleware('locale')->group(function () {
 
     Route::apiResource('trainings', TrainingController::class)->only('store');
     Route::apiResource('pages', PageController::class)->only(['index', 'show']);
@@ -62,7 +62,7 @@ Route::middleware('locale')->group(function () {
     Route::apiResource('employees', EmployeeController::class)->only(['index', 'show']);
     Route::apiResource('languages', LanguageController::class)->only(['index', 'show']);
     Route::apiResource('legislations', LegislationController::class)->only(['index', 'show']);
-    Route::apiResource('abouts', AboutController::class)->only(['indexte', 'show']);
+    Route::apiResource('abouts', AboutController::class)->only(['index', 'show']);
     Route::apiResource('about/categories', AboutCategoryController::class)->only(['index', 'show']);
     Route::apiResource('national/standarts', NationalStandartController::class)->only(['index', 'show']);
     Route::apiResource('national/standart/categories', NationalStandartCategoryController::class)->only(['index', 'show']);
@@ -85,14 +85,17 @@ Route::middleware('locale')->group(function () {
 });
 
 
-
-//BackEnd Route
+//Back Routes
 
 Route::post('admin/login', [AuthController::class, 'login'])->name('login');
 
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('register', [AuthController::class, 'register']);
+    Route::post("/image", [FileController::class, "uploadSingleImage"]);
+    Route::post("/file", [FileController::class, "uploadFile"]);
+    Route::post("/video", [FileController::class, "uploadVideo"]);
+    Route::post("/multi", [FileController::class, "multiUpload"]);
     Route::apiResource('pages', PageController::class);
     Route::apiResource('rules', RuleController::class);
     Route::apiResource('banners', BannerController::class);
@@ -129,7 +132,4 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::apiResource('partners', PartnerController::class);
     Route::apiResource('country/sites', CountrySiteController::class);
     Route::apiResource('statistics', StatisticsController::class);
-    Route::post("/image", [FileController::class, "uploadSingleImage"]);
-    Route::post("/file", [FileController::class, "uploadFile"]);
-    Route::post("/video", [FileController::class, "uploadVideo"]);
 });

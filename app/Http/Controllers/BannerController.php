@@ -20,7 +20,7 @@ class BannerController extends Controller
         if (auth()->check()) {
             $banners = Banner::with('image', 'locales')->get();
         } else {
-            $banners = banner::with('image', 'locale')->get();
+            $banners = banner::with('image', 'locale')->where('is_active', 1)->get();
         }
         return $this->dataResponse($banners);
     }
@@ -31,7 +31,7 @@ class BannerController extends Controller
         if (auth()->check()) {
             $banner = banner::with('image', 'locales')->findOrFail($id);
         } else {
-            $banner = banner::with('image', 'locale')->findOrFail($id);
+            $banner = banner::with('image', 'locale')->where('is_active', 1)->findOrFail($id);
         }
         return $this->dataResponse($banner);
     }
@@ -45,6 +45,7 @@ class BannerController extends Controller
         DB::transaction(function () use ($request, &$banner_id) {
             $banner = new banner;
             $banner->image_uuid = $request->image_uuid;
+            $banner->is_active = $request->is_active;
             $banner->created_at = now();
             $banner->save();
 
@@ -64,6 +65,7 @@ class BannerController extends Controller
         DB::transaction(function () use ($request, $id) {
             $banner = banner::findOrFail($id);
             $banner->image_uuid = $request->image_uuid;
+            $banner->is_active = $request->is_active;
             $banner->updated_at = now();
             $banner->save();
             $banner->setLocales($request->input("locales"));
@@ -87,6 +89,7 @@ class BannerController extends Controller
     {
         return [
             'image_uuid' => 'required|exists:files,id',
+            'is_active' => 'required|integer',
             'locales.*.local' => 'required',
             'locales.*.text' => 'required',
         ];
@@ -98,6 +101,7 @@ class BannerController extends Controller
         return [
             'image_uuid.required' => 'Image id mütləqdir',
             'image_uuid.exists' => 'Image id mövcud deyil',
+            'is_active.required' => 'Status mütləqdir',
             'locales.*.text.required' => 'Mətn mütləqdir',
             'locales.*.local.required' => 'Dil seçimi mütləqdir'
         ];

@@ -17,7 +17,7 @@ class CreatePhotosTable extends Migration
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
-            $table->integer('order')->nullable()->unique();
+            // $table->integer('order');
             $table->bigInteger('photo_folder_id')->unsigned();
             $table->timestamps();
 

@@ -14,7 +14,7 @@ class Banner extends Model
     protected $localeModel = BannerLocale::class;
     protected $keyType = 'integer';
     protected $localableFields = ['text'];
-    protected $fillable = ['image_uuid'];
+    protected $fillable = ['image_uuid' , 'is_active'];
 
     protected $file = File::class;
     protected $key  = 'image_uuid';

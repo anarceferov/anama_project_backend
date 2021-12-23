@@ -8,12 +8,6 @@ use Illuminate\Support\Str;
 
 class FileService
 {
-    private $model;
-
-    public function __construct(File $file)
-    {
-        $this->model = $file;
-    }
 
     public function uploadFile(UploadedFile $uploadedFile, $isPublic = true): File
     {
@@ -29,12 +23,14 @@ class FileService
         }
         $uploadedFile->storeAs($storagePath, $name);
 
-        $this->model->fill([
+        $model = new File;
+
+        $model->fill([
             'path' => $dbPath,
             "extension" => $ext
         ])->save();
 
-        return $this->model; 
+        return $model; 
     }
 
     private function createNewPhotoName(string $ext): string

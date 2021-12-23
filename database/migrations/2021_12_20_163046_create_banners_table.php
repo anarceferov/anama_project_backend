@@ -16,6 +16,7 @@ class CreateBannersTable extends Migration
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid("image_uuid")->constrained("files")->nullable();
+            $table->integer('is_active')->default(0);
             $table->timestamps();
         });
     }
