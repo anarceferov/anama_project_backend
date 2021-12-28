@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Region;
+use App\Models\RegionData;
 use App\Traits\ApiResponder;
 use App\Traits\Paginatable;
 use Illuminate\Http\Request;
@@ -36,7 +37,7 @@ class RegionController extends Controller
         return $this->dataResponse($region);
     }
 
-    
+
     public function store(Request $request)
     {
         $this->validate($request, $this->getValidationRules(), $this->customAttributes());
@@ -95,5 +96,20 @@ class RegionController extends Controller
             'locales.*.name.required' => 'Şəhər adı mütləqdir',
             'locales.*.local.required' => 'Dil seçimi mütləqdir'
         ];
+    }
+
+    public function sum()
+    {
+        $sum = RegionData::all();
+
+        $datas = [
+            'tank' => $sum->sum('tank'),
+            'clean_area' => $sum->sum('clean_area'),
+            'unexplosive'=> $sum->sum('unexplosive'),
+            'pedestrian' => $sum->sum('pedestrian'),
+            'clean_area' => $sum->sum('clean_area'),
+        ];
+
+        return response(['datas' => $datas]);
     }
 }

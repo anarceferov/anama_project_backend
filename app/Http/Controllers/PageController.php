@@ -17,9 +17,9 @@ class PageController extends Controller
     public function index()
     {
         if (!auth()->check()) {
-            $pages = page::where('is_active' , 1)->with('locale' , 'subPage');
+            $pages = page::where('is_active' , 1 )->with('locale' , 'image' , 'subPage');
         } else {
-            $pages = page::with('locales' , 'subPages');
+            $pages = page::with('locales' , 'image' , 'subPages');
         }
         return $this->dataResponse($pages->simplePaginate($this->getPerPage()));
     }
@@ -28,9 +28,9 @@ class PageController extends Controller
     public function show($id)
     {
         if (!auth()->check()) {
-            $page = Page::where('is_active' , 1)->with('locale' , 'subPage')->findOrFail($id);
+            $page = Page::where('is_active' , 1)->with('locale' , 'image' , 'subPage')->findOrFail($id);
         } else {
-            $page = Page::with('locales' , 'subPages')->findOrFail($id);
+            $page = Page::with('locales' , 'image' , 'subPages')->findOrFail($id);
         }
         return $this->dataResponse($page);
     }

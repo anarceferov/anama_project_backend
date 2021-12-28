@@ -8,6 +8,8 @@ use App\Http\Controllers\AllProjectController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\ChronologyController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ContactFormController;
 use App\Http\Controllers\CountrySiteController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FileController;
@@ -37,9 +39,10 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\WorkAboutController;
 use App\Http\Controllers\RuleController;
 use App\Http\Controllers\StatisticsController;
+use App\Http\Controllers\SumRegionController;
 use App\Http\Controllers\TrainingCategoryController;
 use App\Http\Controllers\TrainingController;
-
+use App\Http\Controllers\VacancyController;
 
 // Front Routes
 
@@ -76,12 +79,17 @@ Route::prefix('client')->middleware('locale')->group(function () {
     Route::apiResource('all/project/categories', AllProjectCategoryController::class)->only(['index', 'show']);
     Route::apiResource('projects', ProjectController::class)->only(['index', 'show']);
     Route::apiResource('project/categories', ProjectCategoryController::class)->only(['index', 'show']);
+    Route::apiResource('sum/regions', SumRegionController::class)->only(['index', 'show']);
     Route::apiResource('regions', RegionController::class)->only(['index', 'show']);
     Route::apiResource('data/regions', RegionDataController::class)->only(['index', 'show']);
+    Route::get('sum/data/regions', [RegionController::class, 'sum']);
     Route::apiResource('leaderships', LeaderShipController::class)->only(['index', 'show']);
     Route::apiResource('partners', PartnerController::class)->only(['index', 'show']);
     Route::apiResource('country/sites', CountrySiteController::class)->only(['index', 'show']);
     Route::apiResource('statistics', StatisticsController::class)->only(['index', 'show']);
+    Route::apiResource('contact/forms', ContactFormController::class)->only(['index', 'show', 'create']);
+    Route::apiResource('contacts', ContactController::class)->only(['index', 'show']);
+    Route::apiResource('vacancies', VacancyController::class)->only(['index', 'show']);
 });
 
 
@@ -126,10 +134,14 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::apiResource('all/project/categories', AllProjectCategoryController::class);
     Route::apiResource('photos', PhotoController::class);
     Route::apiResource('photo/folders', PhotoFolderController::class);
+    Route::apiResource('sum/regions', SumRegionController::class);
     Route::apiResource('regions', RegionController::class);
     Route::apiResource('data/regions', RegionDataController::class);
     Route::apiResource('leaderships', LeaderShipController::class);
     Route::apiResource('partners', PartnerController::class);
     Route::apiResource('country/sites', CountrySiteController::class);
     Route::apiResource('statistics', StatisticsController::class);
+    Route::apiResource('contact/forms', ContactFormController::class);
+    Route::apiResource('contacts', ContactController::class);
+    Route::apiResource('vacancies', VacancyController::class);
 });

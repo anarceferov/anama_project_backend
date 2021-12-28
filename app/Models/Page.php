@@ -6,6 +6,7 @@ use App\Traits\Localizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SubPage;
+use App\Models\File;
 
 class Page extends Model
 {
@@ -24,5 +25,10 @@ class Page extends Model
     public function subPage()
     {
         return $this->hasMany(SubPage::class , 'page_id')->where('is_active', 1)->with('locale');
+    }
+
+    public function image()
+    {
+        return $this->belongsTo(File::class , 'image_uuid');
     }
 }

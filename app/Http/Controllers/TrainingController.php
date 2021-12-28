@@ -65,7 +65,7 @@ class TrainingController extends Controller
         $training->tel = $request->tel;
         $training->email = $request->email;
         $training->sector = $request->sector;
-        $training->created_at = now();
+        $training->updated_at = now();
         $training->save();
         return $this->successResponse(trans('ok'));
     }
