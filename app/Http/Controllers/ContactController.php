@@ -14,6 +14,7 @@ class ContactController extends Controller
     public function index()
     {
         $contacts = Contact::all();
+        // return gettype($contacts);
         return $this->dataResponse($contacts);
     }
 
@@ -21,6 +22,7 @@ class ContactController extends Controller
     public function show($id)
     {
         $contacts = Contact::findOrFail($id);
+        return gettype($contacts);
         return $this->dataResponse($contacts);
     }
 
